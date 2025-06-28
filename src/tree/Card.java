@@ -11,6 +11,10 @@ public class Card {
     private Card[] Children;
     private Team team;
 
+    private String header;
+    private Duration duration;
+    private String title;
+
     private JPanel panel;
 
     public Card(Vector2i position, Team team) {
@@ -23,6 +27,7 @@ public class Card {
                 null
         );
         Renderer.window.addPanel(panel);
+        Renderer.window.refresh();
         this.panel = panel;
 
         System.out.println("Created new card at " + panel.getX() + "," + panel.getY());
@@ -41,6 +46,30 @@ public class Card {
         this.panel = panel;
 
         System.out.println("Created new card at " + panel.getX() + "," + panel.getY());
+    }
+
+    public String getHeader() {
+        return header;
+    }
+
+    public void setHeader(String header) {
+        this.header = header;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void setPosition(Vector2i position) {

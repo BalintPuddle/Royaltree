@@ -9,7 +9,7 @@ import java.awt.*;
 public class Window {
     private JFrame frame;
 
-    private final String TITLE = "Royaltree 0.1";
+    private final String TITLE = "Royaltree 0.2";
     private final int WIDTH = 2000;
     private final int HEIGHT = 1000;
 
@@ -46,7 +46,20 @@ public class Window {
 
         panel.setLocation(x, y);
         panel.setBackground(color);
+        panel.setVisible(true);
 
+        JLabel header = new JLabel("Default header", JLabel.CENTER);
+        header.setSize(panel.getWidth(), panel.getHeight());
+        header.setForeground(Color.white);
+
+        JLabel duration = new JLabel("Default duration", JLabel.CENTER);
+        duration.setSize(panel.getWidth(), panel.getHeight());
+        duration.setForeground(Color.white);
+
+        panel.add(header);
+        panel.add(duration);
+
+        refresh();
         return panel;
     }
 
@@ -76,6 +89,10 @@ public class Window {
 
     public Component getComponentAt(int x, int y) {
         return frame.findComponentAt(x, y);
+    }
+
+    public void refresh() {
+        frame.setVisible(true);
     }
 
     public void addPanel(JPanel panel) {

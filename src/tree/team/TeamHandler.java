@@ -17,4 +17,13 @@ public class TeamHandler {
         team.color = color;
         teams.add(team);
     }
+
+    public Team get(String name) {
+        for (Team team : teams) {
+            if (team.name.equals(name)) {
+                return team;
+            }
+        }
+        return null;
+    }
 }

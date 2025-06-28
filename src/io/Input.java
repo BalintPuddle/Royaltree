@@ -80,12 +80,14 @@ public class Input implements KeyListener, MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        Component component = Renderer.window.getComponentAt(e.getX(), e.getY());
-        if (component.getWidth() < Renderer.window.getHeight()) {
-            selectedComponent = component;
-            selectedWidth = component.getWidth();
-            selectedHeight = component.getHeight();
-            dragging = true;
+        if (e.getButton() == 1) {
+            Component component = Renderer.window.getComponentAt(e.getX(), e.getY());
+            if (component.getWidth() < Renderer.window.getHeight()) {
+                selectedComponent = component;
+                selectedWidth = component.getWidth();
+                selectedHeight = component.getHeight();
+                dragging = true;
+            }
         }
     }
 
@@ -106,12 +108,14 @@ public class Input implements KeyListener, MouseListener {
     }
 
     public static void moveComponentToMouse() {
-        if (selectedComponent != null) {
+        try {
             Vector2i newPos = Renderer.window.PositionToGridPosition(new Vector2i(
                     MouseInfo.getPointerInfo().getLocation().x - selectedWidth / 2,
                     MouseInfo.getPointerInfo().getLocation().y - selectedHeight / 2)
             );
             selectedComponent.setLocation(newPos.x, newPos.y);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
         }
     }
 }

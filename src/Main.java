@@ -14,8 +14,9 @@ public class Main {
     public static void init() {
         Renderer renderer = new Renderer();
         TeamHandler.init();
-        TreeHandler.addCard(new Vector2i(5, 2), TeamHandler.teams.get(0), CardSizeTypes.MEDIUM);
-        TreeHandler.addCard(new Vector2i(3, 5), TeamHandler.teams.get(0), CardSizeTypes.SMALL);
+        TreeHandler.addCard(new Vector2i(3, 5), TeamHandler.teams.getFirst(), CardSizeTypes.SMALL);
+        TreeHandler.addCard(new Vector2i(5, 2), TeamHandler.teams.getFirst(), CardSizeTypes.MEDIUM);
+        TreeHandler.addCard(new Vector2i(6, 6), TeamHandler.teams.getFirst(), CardSizeTypes.MEDIUM);
 
         Tick.start();
     }
