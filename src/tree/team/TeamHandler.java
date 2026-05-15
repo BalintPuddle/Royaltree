@@ -18,12 +18,16 @@ public class TeamHandler {
         teams.add(team);
     }
 
-    public Team get(String name) {
+    public static Team get(String name) {
         for (Team team : teams) {
             if (team.name.equals(name)) {
                 return team;
             }
         }
         return null;
+    }
+
+    public static Team getdefault() {
+        return teams.getFirst();
     }
 }

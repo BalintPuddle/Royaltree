@@ -1,5 +1,7 @@
 package time;
 
+import io.Camera;
+import io.GuiHandler;
 import io.Input;
 
 import java.util.Timer;
@@ -24,5 +26,6 @@ public class Tick {
         if (Input.dragging) {
             Input.moveComponentToMouse();
         }
+        GuiHandler.cordsLabel.setText(Camera.x + " " + Camera.y);
     }
 }

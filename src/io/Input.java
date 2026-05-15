@@ -4,6 +4,7 @@ import tree.*;
 import tree.team.TeamHandler;
 import utils.Vector2i;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -31,21 +32,25 @@ public class Input implements KeyListener, MouseListener {
         if (e.getKeyChar() == 'w') {
             for (Card card : TreeHandler.getObjects()) {
                 moveCard(card, 0, MOVE_SPEED);
+                Camera.moveRelative(0, MOVE_SPEED);
             }
         }
         if (e.getKeyChar() == 's') {
             for (Card card : TreeHandler.getObjects()) {
                 moveCard(card, 0, -MOVE_SPEED);
+                Camera.moveRelative(0, -MOVE_SPEED);
             }
         }
         if (e.getKeyChar() == 'a') {
             for (Card card : TreeHandler.getObjects()) {
                 moveCard(card, MOVE_SPEED, 0);
+                Camera.moveRelative(-MOVE_SPEED, 0);
             }
         }
         if (e.getKeyChar() == 'd') {
             for (Card card : TreeHandler.getObjects()) {
                 moveCard(card, -MOVE_SPEED, 0);
+                Camera.moveRelative(MOVE_SPEED, 0);
             }
         }
 
@@ -82,11 +87,13 @@ public class Input implements KeyListener, MouseListener {
     public void mousePressed(MouseEvent e) {
         if (e.getButton() == 1) {
             Component component = Renderer.window.getComponentAt(e.getX(), e.getY());
-            if (component.getWidth() < Renderer.window.getHeight()) {
-                selectedComponent = component;
-                selectedWidth = component.getWidth();
-                selectedHeight = component.getHeight();
-                dragging = true;
+            if (component instanceof JPanel) {
+                if (component.getWidth() < Renderer.window.getHeight()) {
+                    selectedComponent = component;
+                    selectedWidth = component.getWidth();
+                    selectedHeight = component.getHeight();
+                    dragging = true;
+                }
             }
         }
     }
@@ -113,8 +120,10 @@ public class Input implements KeyListener, MouseListener {
                     MouseInfo.getPointerInfo().getLocation().x - selectedWidth / 2,
                     MouseInfo.getPointerInfo().getLocation().y - selectedHeight / 2)
             );
-            selectedComponent.setLocation(newPos.x, newPos.y);
-        } catch (RuntimeException e) {
+            if (selectedComponent != null) {
+                selectedComponent.setLocation(newPos.x, newPos.y);
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
