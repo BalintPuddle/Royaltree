@@ -33,11 +33,11 @@ public class Window {
         frame.addMouseListener(input);
         frame.setVisible(true);
 
+        frame.setContentPane(new WindowPanel());
         container = frame.getContentPane();
     }
 
     public JPanel createBoxPanel(int x, int y, Color color, Vector2i size, String label0, String label1) {
-        //Container container = frame.getContentPane();
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
@@ -104,6 +104,7 @@ public class Window {
 
     public void refresh() {
         frame.setVisible(true);
+        frame.getContentPane().setVisible(true);
     }
 
     public void addPanel(JPanel panel) {

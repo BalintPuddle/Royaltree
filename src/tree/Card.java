@@ -94,4 +94,12 @@ public class Card {
     public Vector2i getPosition() {
         return new Vector2i(panel.getX(), panel.getY());
     }
+
+    public int getWidth() {
+        return panel.getWidth();
+    }
+
+    public int getHeight() {
+        return panel.getHeight();
+    }
 }

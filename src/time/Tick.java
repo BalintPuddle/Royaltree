@@ -3,6 +3,7 @@ package time;
 import io.Camera;
 import io.GuiHandler;
 import io.Input;
+import io.Renderer;
 
 import java.util.Timer;
 import java.util.TimerTask;

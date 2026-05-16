@@ -34,11 +34,17 @@ public class Input implements KeyListener, MouseListener {
                 moveCard(card, 0, MOVE_SPEED);
                 Camera.moveRelative(0, MOVE_SPEED);
             }
+            for (LinePanel line : TreeHandler.getLines()) {
+                moveLine(line, 0, MOVE_SPEED);
+            }
         }
         if (e.getKeyChar() == 's') {
             for (Card card : TreeHandler.getCards()) {
                 moveCard(card, 0, -MOVE_SPEED);
                 Camera.moveRelative(0, -MOVE_SPEED);
+            }
+            for (LinePanel line : TreeHandler.getLines()) {
+                moveLine(line, 0, -MOVE_SPEED);
             }
         }
         if (e.getKeyChar() == 'a') {
@@ -46,11 +52,17 @@ public class Input implements KeyListener, MouseListener {
                 moveCard(card, MOVE_SPEED, 0);
                 Camera.moveRelative(-MOVE_SPEED, 0);
             }
+            for (LinePanel line : TreeHandler.getLines()) {
+                moveLine(line, MOVE_SPEED, 0);
+            }
         }
         if (e.getKeyChar() == 'd') {
             for (Card card : TreeHandler.getCards()) {
                 moveCard(card, -MOVE_SPEED, 0);
                 Camera.moveRelative(MOVE_SPEED, 0);
+            }
+            for (LinePanel line : TreeHandler.getLines()) {
+                moveLine(line, -MOVE_SPEED, 0);
             }
         }
 
@@ -75,6 +87,10 @@ public class Input implements KeyListener, MouseListener {
         Vector2i newPos = card.getPosition();
         newPos.add(new Vector2i(x, y));
         card.setPosition(newPos);
+    }
+
+    public void moveLine(LinePanel line, int x, int y) {
+        line.setLocation(x + line.getLocation().x, y + line.getLocation().y);
     }
 
     //MOUSE EVENTS ------------------------------------------------

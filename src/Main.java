@@ -1,4 +1,5 @@
 import io.GuiHandler;
+import io.LinePanel;
 import io.Renderer;
 import time.Tick;
 import tree.Card;
@@ -7,6 +8,7 @@ import tree.Duration;
 import tree.team.TeamHandler;
 import tree.TreeHandler;
 import utils.Vector2i;
+import utils.Vector4i;
 
 import java.awt.*;
 
@@ -30,6 +32,8 @@ public class Main {
         Card albert2 = TreeHandler.createCard("albert2", new Vector2i(3, 10), TeamHandler.get("solleno"), CardSizeTypes.SMALL);
         albert2.setHeader("Albert II");
         albert2.setDuration(new Duration(1147, 1165));
+
+        TreeHandler.drawCardLine(albert1, albert2);
 
         Tick.start();
     }
