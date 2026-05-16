@@ -20,7 +20,7 @@ public class TeamHandler {
 
     public static Team get(String name) {
         for (Team team : teams) {
-            if (team.name.equals(name)) {
+            if (team.name.equalsIgnoreCase(name)) {
                 return team;
             }
         }

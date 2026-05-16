@@ -1,11 +1,14 @@
-import io.Camera;
 import io.GuiHandler;
 import io.Renderer;
 import time.Tick;
+import tree.Card;
 import tree.CardSizeTypes;
+import tree.Duration;
 import tree.team.TeamHandler;
 import tree.TreeHandler;
 import utils.Vector2i;
+
+import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -18,9 +21,15 @@ public class Main {
         TeamHandler.init();
         GuiHandler.init();
 
-        TreeHandler.addCard(new Vector2i(3, 5), TeamHandler.getdefault(), CardSizeTypes.SMALL);
-        TreeHandler.addCard(new Vector2i(5, 2), TeamHandler.getdefault(), CardSizeTypes.MEDIUM);
-        TreeHandler.addCard(new Vector2i(6, 6), TeamHandler.getdefault(), CardSizeTypes.MEDIUM);
+        TeamHandler.createTeam("solleno", Color.ORANGE);
+
+        Card albert1 = TreeHandler.createCard("albert1", new Vector2i(3, 5), TeamHandler.get("solleno"), CardSizeTypes.SMALL);
+        albert1.setHeader("Albert I");
+        albert1.setDuration(new Duration(1100, 1147));
+
+        Card albert2 = TreeHandler.createCard("albert2", new Vector2i(3, 10), TeamHandler.get("solleno"), CardSizeTypes.SMALL);
+        albert2.setHeader("Albert II");
+        albert2.setDuration(new Duration(1147, 1165));
 
         Tick.start();
     }

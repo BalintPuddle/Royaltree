@@ -30,25 +30,25 @@ public class Input implements KeyListener, MouseListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyChar() == 'w') {
-            for (Card card : TreeHandler.getObjects()) {
+            for (Card card : TreeHandler.getCards()) {
                 moveCard(card, 0, MOVE_SPEED);
                 Camera.moveRelative(0, MOVE_SPEED);
             }
         }
         if (e.getKeyChar() == 's') {
-            for (Card card : TreeHandler.getObjects()) {
+            for (Card card : TreeHandler.getCards()) {
                 moveCard(card, 0, -MOVE_SPEED);
                 Camera.moveRelative(0, -MOVE_SPEED);
             }
         }
         if (e.getKeyChar() == 'a') {
-            for (Card card : TreeHandler.getObjects()) {
+            for (Card card : TreeHandler.getCards()) {
                 moveCard(card, MOVE_SPEED, 0);
                 Camera.moveRelative(-MOVE_SPEED, 0);
             }
         }
         if (e.getKeyChar() == 'd') {
-            for (Card card : TreeHandler.getObjects()) {
+            for (Card card : TreeHandler.getCards()) {
                 moveCard(card, -MOVE_SPEED, 0);
                 Camera.moveRelative(MOVE_SPEED, 0);
             }
@@ -58,6 +58,7 @@ public class Input implements KeyListener, MouseListener {
             Point point = MouseInfo.getPointerInfo().getLocation();
 
             TreeHandler.addCard(
+                    "card_" + String.valueOf(TreeHandler.getCards().size()-1),
                     Renderer.window.PositionToGrid(new Vector2i(point.x, point.y)),
                     TeamHandler.teams.getFirst(),
                     CardSizeTypes.SMALL

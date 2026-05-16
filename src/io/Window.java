@@ -8,6 +8,7 @@ import java.awt.*;
 
 public class Window {
     private JFrame frame;
+    private Container container;
 
     private final String TITLE = "Royaltree 0.2";
     private final int WIDTH = 2000;
@@ -30,12 +31,15 @@ public class Window {
         Input input = new Input();
         frame.addKeyListener(input);
         frame.addMouseListener(input);
-
         frame.setVisible(true);
+
+        container = frame.getContentPane();
     }
 
-    public JPanel createBoxPanel(int x, int y, Color color, Vector2i size) {
+    public JPanel createBoxPanel(int x, int y, Color color, Vector2i size, String label0, String label1) {
+        //Container container = frame.getContentPane();
         JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         if (size != null) {
             panel.setSize(size.x, size.y);
@@ -47,17 +51,24 @@ public class Window {
         panel.setLocation(x, y);
         panel.setBackground(color);
         panel.setVisible(true);
+        panel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
-        JLabel header = new JLabel("Default header", JLabel.CENTER);
+        JLabel header = new JLabel(label0, JLabel.CENTER);
+        header.setAlignmentX(Component.CENTER_ALIGNMENT);
         header.setSize(panel.getWidth(), panel.getHeight());
         header.setForeground(Color.white);
 
-        JLabel duration = new JLabel("Default duration", JLabel.CENTER);
+
+        JLabel duration = new JLabel(label1, JLabel.CENTER);
+        duration.setAlignmentX(Component.CENTER_ALIGNMENT);
         duration.setSize(panel.getWidth(), panel.getHeight());
         duration.setForeground(Color.white);
 
+        panel.add(Box.createRigidArea(new Dimension(0, panel.getHeight()/4)));
         panel.add(header);
+        panel.add(Box.createVerticalGlue());
         panel.add(duration);
+        panel.add(Box.createRigidArea(new Dimension(0, panel.getHeight()/4)));
 
         refresh();
         return panel;
@@ -96,7 +107,7 @@ public class Window {
     }
 
     public void addPanel(JPanel panel) {
-        frame.add(panel);
+        container.add(panel);
     }
 
     public String getTitle() {
