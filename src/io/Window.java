@@ -10,7 +10,7 @@ public class Window {
     private JFrame frame;
     private Container container;
 
-    private final String TITLE = "Royaltree 0.2";
+    private final String TITLE = "Royaltree Beta";
     private final int WIDTH = 2000;
     private final int HEIGHT = 1000;
 
@@ -33,7 +33,7 @@ public class Window {
         frame.addMouseListener(input);
         frame.setVisible(true);
 
-        frame.setContentPane(new WindowPanel());
+        frame.setContentPane(new WindowPanel(getGridSize()));
         container = frame.getContentPane();
     }
 
@@ -91,11 +91,10 @@ public class Window {
     }
 
     public Vector2i PositionToGridPosition(Vector2i position) {
-        Vector2i vector = new Vector2i(
+        return Renderer.scene.worldToScreenSpace(
                 (int) Math.floor((double) position.x / ((double) WIDTH / GRID_SIZE)) * (WIDTH / GRID_SIZE),
                 (int) Math.floor((double) position.y / ((double) HEIGHT / GRID_SIZE)) * (HEIGHT / GRID_SIZE)
         );
-        return vector;
     }
 
     public Component getComponentAt(int x, int y) {

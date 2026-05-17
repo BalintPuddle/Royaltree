@@ -13,7 +13,7 @@ import java.util.Objects;
 
 public class TreeHandler {
     private static List<Card> cards = new ArrayList<>();
-    private static List<LinePanel> lines = new ArrayList<>();
+    private static List<Line> lines = new ArrayList<>();
 
     public static void addCard(String id, Vector2i gridPosition, Team team) {
         Card card = new Card(id, Renderer.window.GridToPosition(gridPosition), team);
@@ -34,23 +34,33 @@ public class TreeHandler {
     }
 
     public static void addLine(Vector4i positions) {
-        LinePanel line = new LinePanel(positions, Color.BLACK);
-        line.setLocation(positions.x,positions.y);
-        System.out.println(Math.abs(positions.x-positions.z));
-        Renderer.window.addPanel(line);
+        Line line = new Line(positions, Color.BLACK);
         lines.add(line);
-        Renderer.window.refresh();
     }
 
     public static void drawCardLine(Card from, Card to) {
         Vector2i startPoint, endPoint;
+        int width, height, side = 1;
         startPoint = new Vector2i(
                 from.getPosition().x + from.getWidth()/2,
                 from.getPosition().y + from.getHeight());
         endPoint = new Vector2i(to.getPosition().x + to.getWidth() / 2, to.getPosition().y);
-        System.out.println(startPoint.x + " " + startPoint.y);
-        System.out.println(endPoint.x + " " + endPoint.y);
-        addLine(new Vector4i(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
+        width = Math.abs(startPoint.x - endPoint.x);
+        height = Math.abs(startPoint.y - endPoint.y);
+
+        if (startPoint.x > endPoint.x) {
+            side = -1;  //Determining whether the "to" card is to the left/right, and setting a value to compensate for that
+        }
+
+        addLine(new Vector4i(
+                startPoint.x,   startPoint.y,  //START X, START Y
+                startPoint.x, startPoint.y + height/2));  // END X, END Y
+
+        addLine(new Vector4i(startPoint.x, startPoint.y + height/2, //START X, START Y
+                startPoint.x + width * side, startPoint.y + height/2)); // END X, END Y
+
+        addLine(new Vector4i(startPoint.x + width * side, startPoint.y + height/2, //START X, START Y
+                startPoint.x + width * side, startPoint.y + height)); // END X, END Y
     }
 
     public static List<Card> getCards() {
@@ -66,7 +76,7 @@ public class TreeHandler {
         return null;
     }
 
-    public static List<LinePanel> getLines() {
+    public static List<Line> getLines() {
         return lines;
     }
 }

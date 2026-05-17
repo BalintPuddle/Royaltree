@@ -1,7 +1,9 @@
 package io;
 
+import scene.Scene;
 import tree.*;
 import tree.team.TeamHandler;
+import utils.MathUtil;
 import utils.Vector2i;
 
 import javax.swing.*;
@@ -30,47 +32,23 @@ public class Input implements KeyListener, MouseListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyChar() == 'w') {
-            for (Card card : TreeHandler.getCards()) {
-                moveCard(card, 0, MOVE_SPEED);
-                Camera.moveRelative(0, MOVE_SPEED);
-            }
-            for (LinePanel line : TreeHandler.getLines()) {
-                moveLine(line, 0, MOVE_SPEED);
-            }
+            Renderer.scene.transformAll(0, -MOVE_SPEED);
         }
         if (e.getKeyChar() == 's') {
-            for (Card card : TreeHandler.getCards()) {
-                moveCard(card, 0, -MOVE_SPEED);
-                Camera.moveRelative(0, -MOVE_SPEED);
-            }
-            for (LinePanel line : TreeHandler.getLines()) {
-                moveLine(line, 0, -MOVE_SPEED);
-            }
+            Renderer.scene.transformAll(0, MOVE_SPEED);
         }
         if (e.getKeyChar() == 'a') {
-            for (Card card : TreeHandler.getCards()) {
-                moveCard(card, MOVE_SPEED, 0);
-                Camera.moveRelative(-MOVE_SPEED, 0);
-            }
-            for (LinePanel line : TreeHandler.getLines()) {
-                moveLine(line, MOVE_SPEED, 0);
-            }
+            Renderer.scene.transformAll(-MOVE_SPEED, 0);
         }
         if (e.getKeyChar() == 'd') {
-            for (Card card : TreeHandler.getCards()) {
-                moveCard(card, -MOVE_SPEED, 0);
-                Camera.moveRelative(MOVE_SPEED, 0);
-            }
-            for (LinePanel line : TreeHandler.getLines()) {
-                moveLine(line, -MOVE_SPEED, 0);
-            }
+            Renderer.scene.transformAll(MOVE_SPEED, 0);
         }
 
         if (e.getKeyChar() == 'e') {
             Point point = MouseInfo.getPointerInfo().getLocation();
 
             TreeHandler.addCard(
-                    "card_" + String.valueOf(TreeHandler.getCards().size()-1),
+                    "card_" + (TreeHandler.getCards().size() - 1),
                     Renderer.window.PositionToGrid(new Vector2i(point.x, point.y)),
                     TeamHandler.teams.getFirst(),
                     CardSizeTypes.SMALL
@@ -81,16 +59,6 @@ public class Input implements KeyListener, MouseListener {
     @Override
     public void keyReleased(KeyEvent e) {
 
-    }
-
-    public void moveCard(Card card, int x, int y) {
-        Vector2i newPos = card.getPosition();
-        newPos.add(new Vector2i(x, y));
-        card.setPosition(newPos);
-    }
-
-    public void moveLine(LinePanel line, int x, int y) {
-        line.setLocation(x + line.getLocation().x, y + line.getLocation().y);
     }
 
     //MOUSE EVENTS ------------------------------------------------
@@ -104,7 +72,7 @@ public class Input implements KeyListener, MouseListener {
     public void mousePressed(MouseEvent e) {
         if (e.getButton() == 1) {
             Component component = Renderer.window.getComponentAt(e.getX(), e.getY());
-            if (component instanceof JPanel) {
+            if (component instanceof JPanel && !(component instanceof LinePanel)) {
                 if (component.getWidth() < Renderer.window.getHeight()) {
                     selectedComponent = component;
                     selectedWidth = component.getWidth();
@@ -133,9 +101,9 @@ public class Input implements KeyListener, MouseListener {
 
     public static void moveComponentToMouse() {
         try {
-            Vector2i newPos = Renderer.window.PositionToGridPosition(new Vector2i(
-                    MouseInfo.getPointerInfo().getLocation().x - selectedWidth / 2,
-                    MouseInfo.getPointerInfo().getLocation().y - selectedHeight / 2)
+            Vector2i newPos = Renderer.window.PositionToGridPosition(Renderer.scene.screenToWorldSpace(
+                    MouseInfo.getPointerInfo().getLocation().x - selectedWidth/2,
+                    MouseInfo.getPointerInfo().getLocation().y - selectedHeight/2)
             );
             if (selectedComponent != null) {
                 selectedComponent.setLocation(newPos.x, newPos.y);

@@ -1,5 +1,7 @@
 package io;
 
+import utils.Vector2i;
+
 public class Camera {
     public static int x, y;
 

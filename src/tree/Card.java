@@ -1,12 +1,13 @@
 package tree;
 
 import io.Renderer;
+import scene.Entity;
 import tree.team.Team;
 import utils.Vector2i;
 
 import javax.swing.*;
 
-public class Card {
+public class Card extends Entity {
     private final String id;
     private Card[] parent;
     private Card[] Children;
@@ -16,13 +17,12 @@ public class Card {
     private Duration duration;
     private String title;
 
-    private JPanel panel;
-
     public Card(String id, Vector2i position, Team team) {
+        super(position);
         this.id = id;
         this.team = team;
 
-        JPanel panel = Renderer.window.createBoxPanel(
+        panel = Renderer.window.createBoxPanel(
                 position.x,
                 position.y,
                 team.color,
@@ -30,18 +30,19 @@ public class Card {
                 "Default Header",
                 "0AD - 50 AD"
         );
+        Renderer.scene.addEntity(this);
         Renderer.window.addPanel(panel);
         Renderer.window.refresh();
-        this.panel = panel;
 
         System.out.println("Created new card at " + panel.getX() + "," + panel.getY());
     }
 
     public Card(String id, Vector2i position, Team team, Vector2i size) {
+        super(position);
         this.id = id;
         this.team = team;
 
-        JPanel panel = Renderer.window.createBoxPanel(
+        panel = Renderer.window.createBoxPanel(
                 position.x,
                 position.y,
                 team.color,
@@ -49,8 +50,9 @@ public class Card {
                 "Default Header",
                 "0AD - 50 AD"
         );
+        Renderer.scene.addEntity(this);
         Renderer.window.addPanel(panel);
-        this.panel = panel;
+        Renderer.window.refresh();
 
         System.out.println("Created new card at " + panel.getX() + "," + panel.getY());
     }

@@ -29,7 +29,7 @@ public class Main {
         albert1.setHeader("Albert I");
         albert1.setDuration(new Duration(1100, 1147));
 
-        Card albert2 = TreeHandler.createCard("albert2", new Vector2i(3, 10), TeamHandler.get("solleno"), CardSizeTypes.SMALL);
+        Card albert2 = TreeHandler.createCard("albert2", new Vector2i(6, 10), TeamHandler.get("solleno"), CardSizeTypes.SMALL);
         albert2.setHeader("Albert II");
         albert2.setDuration(new Duration(1147, 1165));
 
