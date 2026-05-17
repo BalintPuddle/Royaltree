@@ -125,4 +125,8 @@ public class Window {
     public int getGridSize() {
         return GRID_SIZE;
     }
+
+    public Container getContainer() {
+        return container;
+    }
 }

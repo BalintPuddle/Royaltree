@@ -26,6 +26,7 @@ public class Scene {
             entity.transform(dx, dy);
         }
         Camera.moveRelative(dx, dy);
+        Renderer.window.getContainer().repaint();
     }
 
     public Vector2i screenToWorldSpace(Vector2i space) {
