@@ -107,6 +107,8 @@ public class Input implements KeyListener, MouseListener {
             );
             if (selectedComponent != null) {
                 selectedComponent.setLocation(newPos.x, newPos.y);
+                Card card = TreeHandler.getCardByPanel((JPanel) selectedComponent);
+                card.update();
             }
         } catch (Exception e) {
             e.printStackTrace();

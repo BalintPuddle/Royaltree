@@ -6,11 +6,13 @@ import tree.team.Team;
 import utils.Vector2i;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Card extends Entity {
     private final String id;
-    private Card[] parent;
-    private Card[] Children;
+    private List<Card> parents;
+    private List<Card> children;
     private Team team;
 
     private String header;
@@ -21,6 +23,8 @@ public class Card extends Entity {
         super(position);
         this.id = id;
         this.team = team;
+        this.parents = new ArrayList<>();
+        this.children = new ArrayList<>();
 
         panel = Renderer.window.createBoxPanel(
                 position.x,
@@ -41,6 +45,8 @@ public class Card extends Entity {
         super(position);
         this.id = id;
         this.team = team;
+        this.parents = new ArrayList<>();
+        this.children = new ArrayList<>();
 
         panel = Renderer.window.createBoxPanel(
                 position.x,
@@ -55,6 +61,18 @@ public class Card extends Entity {
         Renderer.window.refresh();
 
         System.out.println("Created new card at " + panel.getX() + "," + panel.getY());
+    }
+
+    @Override
+    public void update() {
+        for (Card child : children) {
+            TreeHandler.updateCardLine(this, child);
+        }
+    }
+
+    public void addChild(Card child) {
+        children.add(child);
+        TreeHandler.drawCardLine(this, child);
     }
 
     public String getId() {

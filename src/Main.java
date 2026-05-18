@@ -19,7 +19,7 @@ public class Main {
     }
 
     public static void init() {
-        Renderer renderer = new Renderer();
+        Renderer.render();
         TeamHandler.init();
         GuiHandler.init();
 
@@ -33,7 +33,12 @@ public class Main {
         albert2.setHeader("Albert II");
         albert2.setDuration(new Duration(1147, 1165));
 
-        TreeHandler.drawCardLine(albert1, albert2);
+        Card alonso = TreeHandler.createCard("alonso", new Vector2i(0, 10), TeamHandler.get("solleno"), CardSizeTypes.SMALL);
+        alonso.setHeader("Prince Alonso");
+        alonso.setDuration(new Duration(1147, 1165));
+
+        albert1.addChild(albert2);
+        albert1.addChild(alonso);
 
         Tick.start();
     }

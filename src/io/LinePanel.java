@@ -10,9 +10,13 @@ public class LinePanel extends JPanel {
     private final int CORRECTIVE_WIDTH = 2;
     private Vector4i positons;
     private Color color;
-    private int orientation = 0; // 0 = RIGHT, 1 = LEFT
+    private int orientation; // 0 = RIGHT, 1 = LEFT
     public LinePanel(Vector4i pos, Color color) {
         super(new FlowLayout());
+        setup(pos, color);
+    }
+
+    public void setup(Vector4i pos, Color color) {
         if (pos.x <= pos.z) {
             orientation = 0;
         }
@@ -21,11 +25,11 @@ public class LinePanel extends JPanel {
         }
 
         if (orientation == 0) {
-            if (Math.abs(pos.x-pos.z) < LINEWIDTH) { //If the 2 positon's x coordinates are less than the width default them to a straight line
+            if (Math.abs(pos.x-pos.z) < LINEWIDTH) { //If the 2 positons x coordinates are less than the width default them to a straight line
                 setSize(LINEWIDTH, Math.abs(pos.y-pos.w));
                 this.positons = new Vector4i(CORRECTIVE_WIDTH, 0, CORRECTIVE_WIDTH, getHeight());
             }
-            else if (Math.abs(pos.y-pos.w) < LINEWIDTH) { //If the 2 positon's y coordinates are less than the width default them to a straight line
+            else if (Math.abs(pos.y-pos.w) < LINEWIDTH) { //If the 2 positons y coordinates are less than the width default them to a straight line
                 setSize(Math.abs(pos.x-pos.z), LINEWIDTH);
                 this.positons = new Vector4i(0, CORRECTIVE_WIDTH, getWidth(), CORRECTIVE_WIDTH);
             }
@@ -54,6 +58,11 @@ public class LinePanel extends JPanel {
         setVisible(true);
     }
 
+
+    public void updatePositions(Vector4i pos) {
+        setup(pos, color);
+    }
+
     public void setPositons(Vector4i pos) {
         this.positons = pos;
     }
@@ -67,8 +76,15 @@ public class LinePanel extends JPanel {
         g.drawLine(positons.x, positons.y, positons.z, positons.w);
     }
 
-    @Override
-    public Component add(Component comp) {
-        return super.add(comp);
+    public Vector4i getPositons() {
+        return positons;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public int getOrientation() {
+        return orientation;
     }
 }

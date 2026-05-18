@@ -110,6 +110,14 @@ public class Window {
         container.add(panel);
     }
 
+    public void removeLinePanels() {
+        for  (Component component : container.getComponents()) {
+            if (component instanceof LinePanel) {
+                container.remove(component);
+            }
+        }
+    }
+
     public String getTitle() {
         return TITLE;
     }

@@ -14,4 +14,12 @@ public class Entity {
     public void transform(int dx, int dy) {
         panel.setLocation(panel.getLocation().x - dx, panel.getLocation().y - dy);
     }
+
+    public void update() {
+
+    }
+
+    public JPanel getPanel() {
+        return panel;
+    }
 }

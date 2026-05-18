@@ -6,6 +6,7 @@ import tree.team.Team;
 import utils.Vector2i;
 import utils.Vector4i;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,15 +27,39 @@ public class TreeHandler {
         Renderer.window.refresh();
     }
 
-    public static Card createCard(String id, Vector2i gridPosition, Team team, Vector2i size) {
+    public static Card createCard(String id, Vector2i gridPosition, Team team, Vector2i size) { //Same as add card but this one returns the card
         Card card = new Card(id, Renderer.window.GridToPosition(gridPosition), team, size);
         cards.add(card);
         Renderer.window.refresh();
         return card;
     }
 
-    public static void addLine(Vector4i positions) {
-        Line line = new Line(positions, Color.BLACK);
+    public static List<Card> getCards() {
+        return cards;
+    }
+
+    public static Card getCard(String id) {
+        for (Card card : cards) {
+            if (Objects.equals(card.getId(), id)) {
+                return card;
+            }
+        }
+        return null;
+    }
+
+    public static Card getCardByPanel(JPanel panel) {
+        for (Card card : cards) {
+            if (card.getPanel() == panel) {
+                return card;
+            }
+        }
+        return null;
+    }
+
+    //LINES SECTION ----------------------------------------------------------------------------------
+
+    public static void addLine(Card from, Card to, LineType type, Vector4i positions) {
+        Line line = new Line(from, to, type, positions, Color.BLACK);
         lines.add(line);
     }
 
@@ -52,31 +77,51 @@ public class TreeHandler {
             side = -1;  //Determining whether the "to" card is to the left/right, and setting a value to compensate for that
         }
 
-        addLine(new Vector4i(
+        addLine(from, to, LineType.START, new Vector4i(
                 startPoint.x,   startPoint.y,  //START X, START Y
                 startPoint.x, startPoint.y + height/2));  // END X, END Y
 
-        addLine(new Vector4i(startPoint.x, startPoint.y + height/2, //START X, START Y
+        addLine(from, to, LineType.MIDDLE, new Vector4i(startPoint.x, startPoint.y + height/2, //START X, START Y
                 startPoint.x + width * side, startPoint.y + height/2)); // END X, END Y
 
-        addLine(new Vector4i(startPoint.x + width * side, startPoint.y + height/2, //START X, START Y
+        addLine(from, to, LineType.END, new Vector4i(startPoint.x + width * side, startPoint.y + height/2, //START X, START Y
                 startPoint.x + width * side, startPoint.y + height)); // END X, END Y
     }
 
-    public static List<Card> getCards() {
-        return cards;
-    }
+    public static void updateCardLine(Card from, Card to) {
+        Vector2i startPoint, endPoint;
+        int width, height, side = 1;
+        startPoint = new Vector2i(
+                from.getPosition().x + from.getWidth()/2,
+                from.getPosition().y + from.getHeight());
+        endPoint = new Vector2i(to.getPosition().x + to.getWidth() / 2, to.getPosition().y);
+        width = Math.abs(startPoint.x - endPoint.x);
+        height = Math.abs(startPoint.y - endPoint.y);
 
-    public static Card getCard(String id) {
-        for (Card card : cards) {
-            if (Objects.equals(card.getId(), id)) {
-                return card;
-            }
+        if (startPoint.x > endPoint.x) {
+            side = -1;  //Determining whether the "to" card is to the left/right, and setting a value to compensate for that
         }
-        return null;
+
+        getLine(from, to, LineType.START).updatePositions(new Vector4i(startPoint.x, startPoint.y, //START X, START Y
+                startPoint.x, startPoint.y + height/2));
+        getLine(from, to, LineType.MIDDLE).updatePositions(new Vector4i(startPoint.x, startPoint.y + height/2, //START X, START Y
+                startPoint.x + width * side, startPoint.y + height/2));
+        getLine(from, to, LineType.END).updatePositions(new Vector4i(startPoint.x + width * side, startPoint.y + height/2, //START X, START Y
+                startPoint.x + width * side, startPoint.y + height));
     }
 
     public static List<Line> getLines() {
         return lines;
+    }
+
+    public static Line getLine(Card from, Card to, LineType type) {
+        for (Line line : lines) {
+            if (line.from == from && line.to == to && line.type == type) {
+                //System.out.println(from.getId() + " " + to.getId() + " " + type);
+                return line;
+            }
+        }
+        System.out.println("end");
+        return null;
     }
 }

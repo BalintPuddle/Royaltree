@@ -9,4 +9,8 @@ public class Vector4i {
         this.z = z;
         this.w = w;
     }
+
+    public String toString() {
+        return "(" + x + ", " + y + ", " + z + ", " + w + ")";
+    }
 }
