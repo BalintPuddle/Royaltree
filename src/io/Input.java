@@ -1,9 +1,12 @@
 package io;
 
-import scene.Scene;
+import io.gui.GuiHandler;
+import io.gui.GuiPanel;
+import io.gui.InteractionMode;
 import tree.*;
+import tree.card.Card;
+import tree.card.CardSizeTypes;
 import tree.team.TeamHandler;
-import utils.MathUtil;
 import utils.Vector2i;
 
 import javax.swing.*;
@@ -70,14 +73,23 @@ public class Input implements KeyListener, MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (e.getButton() == 1) {
-            Component component = Renderer.window.getComponentAt(e.getX(), e.getY());
-            if (component instanceof JPanel && !(component instanceof LinePanel)) {
-                if (component.getWidth() < Renderer.window.getHeight()) {
+        if (GuiHandler.getMode() == InteractionMode.MOVE) {
+            if (e.getButton() == 1) {
+                Component component = Renderer.window.getComponentAt(e.getX(), e.getY());
+                if (component instanceof JPanel && !(component instanceof LinePanel) && !(component instanceof GuiPanel) && !(component instanceof WindowPanel)) {
                     selectedComponent = component;
                     selectedWidth = component.getWidth();
                     selectedHeight = component.getHeight();
                     dragging = true;
+                }
+            }
+        }
+        else if (GuiHandler.getMode() == InteractionMode.EDIT) {
+            if (e.getButton() == 1) {
+                Component component = Renderer.window.getComponentAt(e.getX(), e.getY());
+                if (component instanceof JPanel && !(component instanceof LinePanel) && !(component instanceof GuiPanel) && !(component instanceof WindowPanel)) {
+                    selectedComponent = component;
+                    GuiHandler.openCardEditor(TreeHandler.getCardByPanel((JPanel) selectedComponent));
                 }
             }
         }

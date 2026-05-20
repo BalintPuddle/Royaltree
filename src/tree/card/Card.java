@@ -1,7 +1,9 @@
-package tree;
+package tree.card;
 
 import io.Renderer;
 import scene.Entity;
+import tree.line.LineMode;
+import tree.TreeHandler;
 import tree.team.Team;
 import utils.Vector2i;
 
@@ -68,11 +70,43 @@ public class Card extends Entity {
         for (Card child : children) {
             TreeHandler.updateCardLine(this, child);
         }
+        for (Card parent : parents) {
+            TreeHandler.updateCardLine(parent, this);
+
+            if (TreeHandler.getMode() == LineMode.HIGH_CENTER) {
+                for (Card sibling : parent.getChildren()) {
+                    TreeHandler.updateCardLine(parent, sibling);
+                }
+            }
+        }
     }
 
     public void addChild(Card child) {
         children.add(child);
+        child.addParent(this);
         TreeHandler.drawCardLine(this, child);
+    }
+
+    public void addParent(Card parent) {
+        parents.add(parent);
+    }
+
+    public Card getHighestChild() {
+        int y = children.getFirst().getPosition().y;
+        Card returncard = null;
+        for (Card child : children) {
+            if (child.getPosition().y <= y) {
+                y = child.getPosition().y;
+                returncard = child;
+            }
+        }
+        return returncard;
+    }
+
+    public void updateChildren() {
+        for (Card child : children) {
+            child.update();
+        }
     }
 
     public String getId() {
@@ -121,5 +155,13 @@ public class Card extends Entity {
 
     public int getHeight() {
         return panel.getHeight();
+    }
+
+    public List<Card> getParents() {
+        return parents;
+    }
+
+    public List<Card> getChildren() {
+        return children;
     }
 }

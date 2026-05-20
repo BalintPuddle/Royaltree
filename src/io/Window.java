@@ -1,6 +1,6 @@
 package io;
 
-import tree.CardSizeTypes;
+import tree.card.CardSizeTypes;
 import utils.Vector2i;
 
 import javax.swing.*;
@@ -74,6 +74,15 @@ public class Window {
         return panel;
     }
 
+    public void createDialog(String title) {
+        int width = 350;
+        int height = 400;
+        JDialog dialog = new JDialog(frame, title);
+        dialog.setSize(width, height);
+        dialog.setLocation(getWidth()/2 - width/2, getHeight()/2 - height/2);
+        dialog.setVisible(true);
+    }
+
     public Vector2i PositionToGrid (Vector2i position) {
         Vector2i vector = new Vector2i(
                 (int) Math.floor((double) position.x / ((double) WIDTH / GRID_SIZE)),
@@ -108,14 +117,6 @@ public class Window {
 
     public void addPanel(JPanel panel) {
         container.add(panel);
-    }
-
-    public void removeLinePanels() {
-        for  (Component component : container.getComponents()) {
-            if (component instanceof LinePanel) {
-                container.remove(component);
-            }
-        }
     }
 
     public String getTitle() {

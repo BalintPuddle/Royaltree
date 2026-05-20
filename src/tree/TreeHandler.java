@@ -1,7 +1,10 @@
 package tree;
 
-import io.LinePanel;
 import io.Renderer;
+import tree.card.Card;
+import tree.line.Line;
+import tree.line.LineMode;
+import tree.line.LineType;
 import tree.team.Team;
 import utils.Vector2i;
 import utils.Vector4i;
@@ -10,11 +13,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class TreeHandler {
     private static List<Card> cards = new ArrayList<>();
     private static List<Line> lines = new ArrayList<>();
+    private static LineMode mode = LineMode.HIGH_CENTER;
 
     public static void addCard(String id, Vector2i gridPosition, Team team) {
         Card card = new Card(id, Renderer.window.GridToPosition(gridPosition), team);
@@ -66,10 +71,15 @@ public class TreeHandler {
     public static void drawCardLine(Card from, Card to) {
         Vector2i startPoint, endPoint;
         int width, height, side = 1;
+
+
         startPoint = new Vector2i(
                 from.getPosition().x + from.getWidth()/2,
                 from.getPosition().y + from.getHeight());
         endPoint = new Vector2i(to.getPosition().x + to.getWidth() / 2, to.getPosition().y);
+
+        if (startPoint.y > endPoint.y) return;
+
         width = Math.abs(startPoint.x - endPoint.x);
         height = Math.abs(startPoint.y - endPoint.y);
 
@@ -77,15 +87,9 @@ public class TreeHandler {
             side = -1;  //Determining whether the "to" card is to the left/right, and setting a value to compensate for that
         }
 
-        addLine(from, to, LineType.START, new Vector4i(
-                startPoint.x,   startPoint.y,  //START X, START Y
-                startPoint.x, startPoint.y + height/2));  // END X, END Y
-
-        addLine(from, to, LineType.MIDDLE, new Vector4i(startPoint.x, startPoint.y + height/2, //START X, START Y
-                startPoint.x + width * side, startPoint.y + height/2)); // END X, END Y
-
-        addLine(from, to, LineType.END, new Vector4i(startPoint.x + width * side, startPoint.y + height/2, //START X, START Y
-                startPoint.x + width * side, startPoint.y + height)); // END X, END Y
+        addLine(from, to, LineType.START, getTypePosition(LineType.START, startPoint, endPoint, width, height, side, from));
+        addLine(from, to, LineType.MIDDLE, getTypePosition(LineType.MIDDLE, startPoint, endPoint, width, height, side, from));
+        addLine(from, to, LineType.END, getTypePosition(LineType.END, startPoint, endPoint, width, height, side, from));
     }
 
     public static void updateCardLine(Card from, Card to) {
@@ -98,16 +102,71 @@ public class TreeHandler {
         width = Math.abs(startPoint.x - endPoint.x);
         height = Math.abs(startPoint.y - endPoint.y);
 
+        if (startPoint.y > endPoint.y) return;
+
         if (startPoint.x > endPoint.x) {
             side = -1;  //Determining whether the "to" card is to the left/right, and setting a value to compensate for that
         }
 
-        getLine(from, to, LineType.START).updatePositions(new Vector4i(startPoint.x, startPoint.y, //START X, START Y
-                startPoint.x, startPoint.y + height/2));
-        getLine(from, to, LineType.MIDDLE).updatePositions(new Vector4i(startPoint.x, startPoint.y + height/2, //START X, START Y
-                startPoint.x + width * side, startPoint.y + height/2));
-        getLine(from, to, LineType.END).updatePositions(new Vector4i(startPoint.x + width * side, startPoint.y + height/2, //START X, START Y
-                startPoint.x + width * side, startPoint.y + height));
+        getLine(from, to, LineType.START).updatePositions(getTypePosition(LineType.START, startPoint, endPoint, width, height, side, from));
+        getLine(from, to, LineType.MIDDLE).updatePositions(getTypePosition(LineType.MIDDLE, startPoint, endPoint, width, height, side, from));
+        getLine(from, to, LineType.END).updatePositions(getTypePosition(LineType.END, startPoint, endPoint, width, height, side, from));
+    }
+
+    public static Vector4i getTypePosition(LineType type, Vector2i startPoint, Vector2i endPoint, int width, int height, int side, Card from) {
+        switch (mode) {
+            case CENTER:
+                switch (type) {
+                    case START ->
+                    {
+                        return new Vector4i(
+                                startPoint.x,   startPoint.y,  //START X, START Y
+                                startPoint.x, startPoint.y + height/2);  // END X, END Y
+                    }
+                    case MIDDLE ->
+                    {
+                        return new Vector4i(startPoint.x, startPoint.y + height/2, //START X, START Y
+                                startPoint.x + width * side, startPoint.y + height/2); // END X, END Y
+                    }
+                    case END ->
+                    {
+                        return new Vector4i(startPoint.x + width * side, startPoint.y + height/2, //START X, START Y
+                                startPoint.x + width * side, startPoint.y + height); // END X, END Y
+                    }
+                    case null, default ->
+                    {
+                        return new Vector4i();
+                    }
+                }
+            case HIGH_CENTER:
+                Card highest = from.getHighestChild();
+                int difference = Math.abs(highest.getPosition().y - endPoint.y);
+
+                switch (type) {
+                    case START ->
+                    {
+                        return new Vector4i(
+                                startPoint.x,   startPoint.y,  //START X, START Y
+                                startPoint.x, startPoint.y + height/2 - difference/2);  // END X, END Y
+                    }
+                    case MIDDLE ->
+                    {
+                        return new Vector4i(startPoint.x, startPoint.y + height/2 - difference/2, //START X, START Y
+                                startPoint.x + width * side, startPoint.y + height/2 - difference/2); // END X, END Y
+                    }
+                    case END ->
+                    {
+                        return new Vector4i(startPoint.x + width * side, startPoint.y + height/2 - difference/2, //START X, START Y
+                                startPoint.x + width * side, startPoint.y + height); // END X, END Y
+                    }
+                    case null, default ->
+                    {
+                        return new Vector4i();
+                    }
+                }
+            case null, default:
+                return new Vector4i();
+        }
     }
 
     public static List<Line> getLines() {
@@ -121,7 +180,10 @@ public class TreeHandler {
                 return line;
             }
         }
-        System.out.println("end");
-        return null;
+        throw new NoSuchElementException("No such line!");
+    }
+
+    public static LineMode getMode() {
+        return mode;
     }
 }

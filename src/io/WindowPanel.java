@@ -7,7 +7,7 @@ public class WindowPanel extends JPanel {
     int GRID_SIZE;
     public WindowPanel(int gridsize) {
         super(null, true);
-        this.GRID_SIZE = gridsize;
+        this.GRID_SIZE = (int) (gridsize * 2.5);
         setOpaque(true);
     }
 
@@ -22,12 +22,12 @@ public class WindowPanel extends JPanel {
 
         // Vertical lines
         for (int x = -GRID_SIZE; x < getWidth() + GRID_SIZE; x += GRID_SIZE) {
-            g.drawLine(x + offsetX, 0, x + offsetX, getHeight());
+            g.drawLine(x - offsetX, 0, x - offsetX, getHeight());
         }
 
         // Horizontal lines
         for (int y = -GRID_SIZE; y < getHeight() + GRID_SIZE; y += GRID_SIZE) {
-            g.drawLine(0, y + offsetY, getWidth(), y + offsetY);
+            g.drawLine(0, y - offsetY, getWidth(), y - offsetY);
         }
     }
 }

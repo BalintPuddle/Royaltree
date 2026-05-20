@@ -3,8 +3,6 @@ package scene;
 import io.Camera;
 import io.Renderer;
 import io.Window;
-import tree.Line;
-import tree.TreeHandler;
 import utils.Vector2i;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package tree;
+package tree.card;
 
 public class Duration {
     public int from;

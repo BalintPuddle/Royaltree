@@ -1,14 +1,12 @@
-import io.GuiHandler;
-import io.LinePanel;
+import io.gui.GuiHandler;
 import io.Renderer;
 import time.Tick;
-import tree.Card;
-import tree.CardSizeTypes;
-import tree.Duration;
+import tree.card.Card;
+import tree.card.CardSizeTypes;
+import tree.card.Duration;
 import tree.team.TeamHandler;
 import tree.TreeHandler;
 import utils.Vector2i;
-import utils.Vector4i;
 
 import java.awt.*;
 
@@ -23,7 +21,7 @@ public class Main {
         TeamHandler.init();
         GuiHandler.init();
 
-        TeamHandler.createTeam("solleno", Color.ORANGE);
+        TeamHandler.createTeam("solleno", Color.RED);
 
         Card albert1 = TreeHandler.createCard("albert1", new Vector2i(3, 5), TeamHandler.get("solleno"), CardSizeTypes.SMALL);
         albert1.setHeader("Albert I");
@@ -37,8 +35,13 @@ public class Main {
         alonso.setHeader("Prince Alonso");
         alonso.setDuration(new Duration(1147, 1165));
 
+        Card alonso1 = TreeHandler.createCard("alonso1", new Vector2i(0, 15), TeamHandler.get("solleno"), CardSizeTypes.SMALL);
+        alonso1.setHeader("Alonso I.");
+        alonso1.setDuration(new Duration(1147, 1165));
+
         albert1.addChild(albert2);
         albert1.addChild(alonso);
+        alonso.addChild(alonso1);
 
         Tick.start();
     }

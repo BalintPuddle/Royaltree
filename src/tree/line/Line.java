@@ -1,8 +1,9 @@
-package tree;
+package tree.line;
 
 import io.LinePanel;
 import io.Renderer;
 import scene.Entity;
+import tree.card.Card;
 import utils.Vector2i;
 import utils.Vector4i;
 
