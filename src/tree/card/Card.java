@@ -87,6 +87,12 @@ public class Card extends Entity {
         TreeHandler.drawCardLine(this, child);
     }
 
+    public void removeChild(Card child) {
+        children.remove(child);
+        child.parents.clear();
+        TreeHandler.removeCardLine(this, child);
+    }
+
     public void addParent(Card parent) {
         parents.add(parent);
     }
@@ -107,6 +113,14 @@ public class Card extends Entity {
         for (Card child : children) {
             child.update();
         }
+    }
+
+    public boolean isChildOf(Card parent) {
+        return parents.contains(parent);
+    }
+
+    public boolean isParentOf(Card child) {
+        return children.contains(child);
     }
 
     public String getId() {

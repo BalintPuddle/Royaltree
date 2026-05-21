@@ -39,9 +39,9 @@ public class Main {
         alonso1.setHeader("Alonso I.");
         alonso1.setDuration(new Duration(1147, 1165));
 
-        albert1.addChild(albert2);
-        albert1.addChild(alonso);
-        alonso.addChild(alonso1);
+        //albert1.addChild(albert2);
+        //albert1.addChild(alonso);
+        //alonso.addChild(alonso1);
 
         Tick.start();
     }

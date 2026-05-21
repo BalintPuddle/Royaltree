@@ -1,5 +1,6 @@
 package io;
 
+import io.gui.iDialogInfo;
 import tree.card.CardSizeTypes;
 import utils.Vector2i;
 
@@ -74,13 +75,24 @@ public class Window {
         return panel;
     }
 
-    public void createDialog(String title) {
-        int width = 350;
-        int height = 400;
-        JDialog dialog = new JDialog(frame, title);
-        dialog.setSize(width, height);
-        dialog.setLocation(getWidth()/2 - width/2, getHeight()/2 - height/2);
-        dialog.setVisible(true);
+    public <T> void createDialog(String title, int width, int height, iDialogInfo info, T modifiable) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setSize(width, height);
+
+        info.create(panel, modifiable);
+
+        int result = JOptionPane.showConfirmDialog(
+                null,
+                panel,
+                title,
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (result == JOptionPane.OK_OPTION) {
+            info.action(modifiable);
+        }
     }
 
     public Vector2i PositionToGrid (Vector2i position) {
@@ -119,6 +131,10 @@ public class Window {
         container.add(panel);
     }
 
+    public void removePanel(JPanel panel) {
+        container.remove(panel);
+    }
+
     public String getTitle() {
         return TITLE;
     }
@@ -137,5 +153,9 @@ public class Window {
 
     public Container getContainer() {
         return container;
+    }
+
+    public int getWidthPercent(float percent) {
+        return (int) (WIDTH * (percent/100));
     }
 }

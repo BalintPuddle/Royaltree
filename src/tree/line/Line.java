@@ -3,6 +3,7 @@ package tree.line;
 import io.LinePanel;
 import io.Renderer;
 import scene.Entity;
+import tree.TreeHandler;
 import tree.card.Card;
 import utils.Vector2i;
 import utils.Vector4i;
@@ -36,5 +37,10 @@ public class Line extends Entity {
     @Override
     public JPanel getPanel() {
         return linePanel;
+    }
+
+    public void destroy() {
+        Renderer.window.removePanel(linePanel);
+        TreeHandler.getLines().remove(this);
     }
 }

@@ -15,16 +15,20 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Input implements KeyListener, MouseListener {
     private static final int MOVE_SPEED = 15;
 
     public static boolean dragging;
+    public static Card[] connectionPair;
     public static Component selectedComponent;
     public static int selectedWidth, selectedHeight;
 
     public Input() {
         dragging = false;
+        connectionPair = new Card[2];
     }
 
     @Override
@@ -90,6 +94,25 @@ public class Input implements KeyListener, MouseListener {
                 if (component instanceof JPanel && !(component instanceof LinePanel) && !(component instanceof GuiPanel) && !(component instanceof WindowPanel)) {
                     selectedComponent = component;
                     GuiHandler.openCardEditor(TreeHandler.getCardByPanel((JPanel) selectedComponent));
+                }
+            }
+        }
+        else if (GuiHandler.getMode() == InteractionMode.CONNECT) {
+            if (e.getButton() == 1) {
+                Component component = Renderer.window.getComponentAt(e.getX(), e.getY());
+                if (component instanceof JPanel && !(component instanceof LinePanel) && !(component instanceof GuiPanel) && !(component instanceof WindowPanel)) {
+                    selectedComponent = component;
+                    connectionPair[0] = TreeHandler.getCardByPanel((JPanel) selectedComponent);
+                }
+            }
+            else if (e.getButton() == 3) {
+                Component component = Renderer.window.getComponentAt(e.getX(), e.getY());
+                if (component instanceof JPanel && !(component instanceof LinePanel) && !(component instanceof GuiPanel) && !(component instanceof WindowPanel)) {
+                    selectedComponent = component;
+                    connectionPair[1] = TreeHandler.getCardByPanel((JPanel) selectedComponent);
+                    TreeHandler.connect(connectionPair[0], connectionPair[1]);
+                    connectionPair[0] = null;
+                    connectionPair[1] = null;
                 }
             }
         }

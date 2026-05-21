@@ -169,6 +169,26 @@ public class TreeHandler {
         }
     }
 
+    public static void removeCardLine(Card from, Card to) {
+        getLine(from, to, LineType.START).destroy();
+        getLine(from, to, LineType.MIDDLE).destroy();
+        getLine(from, to, LineType.END).destroy();
+    }
+
+    public static void connect(Card from, Card to) {
+        if (from.isParentOf(to)) {
+            disconnect(from, to);
+        }
+        else {
+            from.addChild(to);
+        }
+    }
+
+    public static void disconnect(Card from, Card to) {
+        from.removeChild(to);
+        removeCardLine(from, to);
+    }
+
     public static List<Line> getLines() {
         return lines;
     }
