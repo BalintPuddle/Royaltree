@@ -25,16 +25,18 @@ public class Card extends Entity {
         super(position);
         this.id = id;
         this.team = team;
+        this.header = "New Card";
+        this.duration = new Duration(0, 0);
         this.parents = new ArrayList<>();
         this.children = new ArrayList<>();
 
         panel = Renderer.window.createBoxPanel(
                 position.x,
                 position.y,
-                team.color,
+                team.getColor(),
                 null,
-                "Default Header",
-                "0AD - 50 AD"
+                header,
+                "0-0 AD"
         );
         Renderer.scene.addEntity(this);
         Renderer.window.addPanel(panel);
@@ -49,14 +51,16 @@ public class Card extends Entity {
         this.team = team;
         this.parents = new ArrayList<>();
         this.children = new ArrayList<>();
+        this.header = "New Card";
+        this.duration = new Duration(0, 0);
 
         panel = Renderer.window.createBoxPanel(
                 position.x,
                 position.y,
-                team.color,
+                team.getColor(),
                 size,
-                "Default Header",
-                "0AD - 50 AD"
+                header,
+                "0-0 AD"
         );
         Renderer.scene.addEntity(this);
         Renderer.window.addPanel(panel);
@@ -81,16 +85,30 @@ public class Card extends Entity {
         }
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+
     public void addChild(Card child) {
         children.add(child);
         child.addParent(this);
         TreeHandler.drawCardLine(this, child);
+        Renderer.window.getContainer().repaint();
     }
 
     public void removeChild(Card child) {
         children.remove(child);
         child.parents.clear();
         TreeHandler.removeCardLine(this, child);
+        Renderer.window.getContainer().repaint();
     }
 
     public void addParent(Card parent) {
@@ -123,8 +141,8 @@ public class Card extends Entity {
         return children.contains(child);
     }
 
-    public String getId() {
-        return id;
+    public boolean isSiblingOf(Card sibling) {
+        return getSiblings().contains(sibling);
     }
 
     public String getHeader() {
@@ -143,6 +161,12 @@ public class Card extends Entity {
 
     public void setDuration(Duration duration) {
         this.duration = duration;
+        JLabel durationcomp = (JLabel) panel.getComponent(3);
+        durationcomp.setText(duration.get());
+    }
+
+    public void setDuration(int from, int to) {
+        this.duration = new Duration(from, to);
         JLabel durationcomp = (JLabel) panel.getComponent(3);
         durationcomp.setText(duration.get());
     }
@@ -177,5 +201,15 @@ public class Card extends Entity {
 
     public List<Card> getChildren() {
         return children;
+    }
+
+    public List<Card> getSiblings() {
+        List<Card> siblings = new ArrayList<>();
+        for (Card other : getParents().getFirst().getChildren()) {
+            if (other != this) {
+                siblings.add(other);
+            }
+        }
+        return siblings;
     }
 }

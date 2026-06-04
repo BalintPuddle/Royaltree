@@ -8,20 +8,20 @@ import java.awt.*;
 
 public class GuiHandler {
     public static JLabel cordsLabel;
-    private static JButton moveButton, editbutton, connectiontool;
+    private static JButton moveButton, editbutton, connectiontool, settings;
 
     private static InteractionMode mode;
 
     public static void init() {
-        GuiPanel cordspanel = new GuiPanel();
-        cordspanel.setSize(io.Renderer.window.getWidth(), 30);
-        cordspanel.setLocation(0, 0);
-        cordspanel.setLayout(new BoxLayout(cordspanel, BoxLayout.X_AXIS));
-        cordspanel.setBackground(Color.GRAY);
-        cordspanel.setVisible(true);
+        GuiPanel toolpanel = new GuiPanel();
+        toolpanel.setSize(io.Renderer.window.getWidth(), 30);
+        toolpanel.setLocation(0, 0);
+        toolpanel.setLayout(new BoxLayout(toolpanel, BoxLayout.X_AXIS));
+        toolpanel.setBackground(Color.GRAY);
+        toolpanel.setVisible(true);
 
         cordsLabel = new JLabel("0 0");
-        cordsLabel.setSize(cordspanel.getWidth(), cordspanel.getHeight());
+        cordsLabel.setSize(toolpanel.getWidth(), toolpanel.getHeight());
         cordsLabel.setForeground(Color.white);
 
         moveButton = new JButton("Move");
@@ -53,25 +53,33 @@ public class GuiHandler {
             editbutton.setEnabled(true);
             connectiontool.setEnabled(false);
         });
+        settings = new JButton("Settings");
+        settings.setFocusable(false);
+        settings.addActionListener(e -> {
+            System.out.println("Settings button pressed");
+            Renderer.window.createDialog("Global Settings", Renderer.window.getWidthPercent(45), Renderer.window.getHeightPercent(40f), new SettingsDialog(), null);
+        });
 
-        cordspanel.add(Box.createRigidArea(new Dimension(io.Renderer.window.getWidthPercent(1f), 0)));
-        cordspanel.add(moveButton);
-        cordspanel.add(Box.createRigidArea(new Dimension(io.Renderer.window.getWidthPercent(0.1f), 0)));
-        cordspanel.add(editbutton);
-        cordspanel.add(Box.createRigidArea(new Dimension(io.Renderer.window.getWidthPercent(0.1f), 0)));
-        cordspanel.add(connectiontool);
-        cordspanel.add(Box.createHorizontalGlue());
-        cordspanel.add(cordsLabel);
-        cordspanel.add(Box.createRigidArea(new Dimension(30, 0)));
+        toolpanel.add(Box.createRigidArea(new Dimension(io.Renderer.window.getWidthPercent(1f), 0)));
+        toolpanel.add(moveButton);
+        toolpanel.add(Box.createRigidArea(new Dimension(io.Renderer.window.getWidthPercent(0.1f), 0)));
+        toolpanel.add(editbutton);
+        toolpanel.add(Box.createRigidArea(new Dimension(io.Renderer.window.getWidthPercent(0.1f), 0)));
+        toolpanel.add(connectiontool);
+        toolpanel.add(Box.createRigidArea(new Dimension(io.Renderer.window.getWidthPercent(0.1f), 0)));
+        toolpanel.add(settings);
+        toolpanel.add(Box.createHorizontalGlue());
+        toolpanel.add(cordsLabel);
+        toolpanel.add(Box.createRigidArea(new Dimension(30, 0)));
 
         io.Renderer.window.refresh();
-        Renderer.window.addPanel(cordspanel);
+        Renderer.window.addPanel(toolpanel);
 
         mode = InteractionMode.MOVE;
     }
 
     public static void openCardEditor(Card card) {
-        Renderer.window.createDialog("Card editor: " + card.getHeader(), 300, 400, new CardDialog(), card);
+        Renderer.window.createDialog("Card editor: " + card.getHeader(), 300, Renderer.window.getHeightPercent(13f), new CardDialog(), card);
     }
 
     public static InteractionMode getMode() {

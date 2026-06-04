@@ -15,7 +15,7 @@ public class Window {
     private final int WIDTH = 2000;
     private final int HEIGHT = 1000;
 
-    private final int GRID_SIZE = 20;
+    private int GRID_SIZE = 20;
 
     public Window() {
         createWindow();
@@ -28,6 +28,7 @@ public class Window {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(null);
         frame.setResizable(false);
+        frame.setFocusable(true);
 
         Input input = new Input();
         frame.addKeyListener(input);
@@ -39,7 +40,7 @@ public class Window {
     }
 
     public JPanel createBoxPanel(int x, int y, Color color, Vector2i size, String label0, String label1) {
-        JPanel panel = new JPanel();
+        JPanel panel = new InteractablePanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         if (size != null) {
@@ -76,14 +77,14 @@ public class Window {
     }
 
     public <T> void createDialog(String title, int width, int height, iDialogInfo info, T modifiable) {
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel();   //Creating a panel that will be the parent to every component and the actual visual part
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setSize(width, height);
+        panel.setPreferredSize(new Dimension(width, height));
 
         info.create(panel, modifiable);
 
         int result = JOptionPane.showConfirmDialog(
-                null,
+                frame,
                 panel,
                 title,
                 JOptionPane.OK_CANCEL_OPTION,
@@ -93,6 +94,28 @@ public class Window {
         if (result == JOptionPane.OK_OPTION) {
             info.action(modifiable);
         }
+    }
+
+    public <T> iDialogInfo showDialog(String title, int width, int height, iDialogInfo info, T modifiable) {
+        JPanel panel = new JPanel();   //Creating a panel that will be the parent to every component and the actual visual part
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setPreferredSize(new Dimension(width, height));
+
+        info.create(panel, modifiable);
+
+        int result = JOptionPane.showConfirmDialog(
+                frame,
+                panel,
+                title,
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (result == JOptionPane.OK_OPTION) {
+            info.action(modifiable);
+        }
+
+        return info;
     }
 
     public Vector2i PositionToGrid (Vector2i position) {
@@ -157,5 +180,9 @@ public class Window {
 
     public int getWidthPercent(float percent) {
         return (int) (WIDTH * (percent/100));
+    }
+
+    public int getHeightPercent(float percent) {
+        return (int) (HEIGHT * (percent/100));
     }
 }

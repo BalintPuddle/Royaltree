@@ -1,7 +1,6 @@
 package io;
 
 import io.gui.GuiHandler;
-import io.gui.GuiPanel;
 import io.gui.InteractionMode;
 import tree.*;
 import tree.card.Card;
@@ -15,8 +14,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Input implements KeyListener, MouseListener {
     private static final int MOVE_SPEED = 15;
@@ -57,7 +54,7 @@ public class Input implements KeyListener, MouseListener {
             TreeHandler.addCard(
                     "card_" + (TreeHandler.getCards().size() - 1),
                     Renderer.window.PositionToGrid(new Vector2i(point.x, point.y)),
-                    TeamHandler.teams.getFirst(),
+                    TeamHandler.getdefault(),
                     CardSizeTypes.SMALL
             );
         }
@@ -80,7 +77,7 @@ public class Input implements KeyListener, MouseListener {
         if (GuiHandler.getMode() == InteractionMode.MOVE) {
             if (e.getButton() == 1) {
                 Component component = Renderer.window.getComponentAt(e.getX(), e.getY());
-                if (component instanceof JPanel && !(component instanceof LinePanel) && !(component instanceof GuiPanel) && !(component instanceof WindowPanel)) {
+                if (component instanceof InteractablePanel) {
                     selectedComponent = component;
                     selectedWidth = component.getWidth();
                     selectedHeight = component.getHeight();
@@ -91,7 +88,7 @@ public class Input implements KeyListener, MouseListener {
         else if (GuiHandler.getMode() == InteractionMode.EDIT) {
             if (e.getButton() == 1) {
                 Component component = Renderer.window.getComponentAt(e.getX(), e.getY());
-                if (component instanceof JPanel && !(component instanceof LinePanel) && !(component instanceof GuiPanel) && !(component instanceof WindowPanel)) {
+                if (component instanceof InteractablePanel) {
                     selectedComponent = component;
                     GuiHandler.openCardEditor(TreeHandler.getCardByPanel((JPanel) selectedComponent));
                 }
@@ -100,14 +97,14 @@ public class Input implements KeyListener, MouseListener {
         else if (GuiHandler.getMode() == InteractionMode.CONNECT) {
             if (e.getButton() == 1) {
                 Component component = Renderer.window.getComponentAt(e.getX(), e.getY());
-                if (component instanceof JPanel && !(component instanceof LinePanel) && !(component instanceof GuiPanel) && !(component instanceof WindowPanel)) {
+                if (component instanceof InteractablePanel) {
                     selectedComponent = component;
                     connectionPair[0] = TreeHandler.getCardByPanel((JPanel) selectedComponent);
                 }
             }
             else if (e.getButton() == 3) {
                 Component component = Renderer.window.getComponentAt(e.getX(), e.getY());
-                if (component instanceof JPanel && !(component instanceof LinePanel) && !(component instanceof GuiPanel) && !(component instanceof WindowPanel)) {
+                if (component instanceof InteractablePanel) {
                     selectedComponent = component;
                     connectionPair[1] = TreeHandler.getCardByPanel((JPanel) selectedComponent);
                     TreeHandler.connect(connectionPair[0], connectionPair[1]);

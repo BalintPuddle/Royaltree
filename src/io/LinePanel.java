@@ -12,7 +12,7 @@ public class LinePanel extends JPanel {
     private Color color;
     private int orientation; // 0 = RIGHT, 1 = LEFT
     public LinePanel(Vector4i pos, Color color) {
-        super(new FlowLayout());
+        super(new FlowLayout( ));
         setup(pos, color);
     }
 
