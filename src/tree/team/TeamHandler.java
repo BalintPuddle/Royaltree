@@ -10,8 +10,6 @@ public class TeamHandler {
 
     public static void init() {
         createTeam("default", Color.BLUE);
-        createTeam("yellow", Color.YELLOW);
-        createTeam("green", Color.GREEN);
     }
 
     public static void createTeam(String name, Color color) {

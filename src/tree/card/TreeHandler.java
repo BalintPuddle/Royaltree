@@ -1,7 +1,6 @@
-package tree;
+package tree.card;
 
-import io.Renderer;
-import tree.card.Card;
+import io.renderer.Renderer;
 import tree.line.Line;
 import tree.line.LineMode;
 import tree.line.LineType;
@@ -59,6 +58,12 @@ public class TreeHandler {
             }
         }
         return null;
+    }
+
+    public static void updateAllCards() {
+        for (Card card : cards) {
+            card.update();
+        }
     }
 
     //LINES SECTION ----------------------------------------------------------------------------------

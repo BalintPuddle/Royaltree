@@ -1,6 +1,8 @@
 package io.gui;
 
-import io.Renderer;
+import io.renderer.Renderer;
+import io.renderer.WindowPanel;
+import tree.card.TreeHandler;
 import tree.team.Team;
 import tree.team.TeamHandler;
 
@@ -10,6 +12,11 @@ import java.awt.*;
 public class SettingsDialog implements iDialogInfo {
     private int page;
     private int teamselector;
+    private JTextField gridfield, namefield;
+    private JCheckBox showgrid;
+    private JPanel colorvisual;
+    private Color currentColor;
+    private JSlider R_Slider, G_Slider, B_Slider;
 
     @Override
     public <T> void create(JPanel panel, T modifiable) {
@@ -22,23 +29,23 @@ public class SettingsDialog implements iDialogInfo {
         content.setLayout(new FlowLayout(FlowLayout.LEFT));
 
         JButton generalbtn = new JButton("General");
-        generalbtn.addActionListener(e -> {
+        generalbtn.addActionListener(_ -> {
             System.out.println("General button pressed");
             page = 0;
-            buildContents(0, content);
+            buildPage(0, content);
         });
 
         JButton teamsbtn = new JButton("Teams");
-        teamsbtn.addActionListener(e -> {
+        teamsbtn.addActionListener(_ -> {
             System.out.println("Teams button pressed");
             page = 1;
-            buildContents(1, content);
+            buildPage(1, content);
         });
         JButton linesbtn = new JButton("Lines");
-        linesbtn.addActionListener(e -> {
+        linesbtn.addActionListener(_ -> {
             System.out.println("Lines button pressed");
             page = 2;
-            buildContents(2, content);
+            buildPage(2, content);
         });
         navbar.add(generalbtn);
         navbar.add(teamsbtn);
@@ -49,23 +56,35 @@ public class SettingsDialog implements iDialogInfo {
 
         teamselector = 0;
 
-        buildContents(page, content);
+        buildPage(page, content);
     }
 
     @Override
     public <T> void action(T modifiable) {
+        switch (page) {
+            case 0:
+                Renderer.window.setGridSize(Integer.parseInt(gridfield.getText()));
+                WindowPanel windowPanel = (WindowPanel) Renderer.window.getContainer();
+                windowPanel.updateGrid(Integer.parseInt(gridfield.getText()));
 
+                Renderer.window.setShowGrid(showgrid.isSelected());
+                break;
+            case 1:
+                TreeHandler.updateAllCards();
+                break;
+        }
     }
 
-    private void buildContents(int page, JPanel panel) {
+    private void buildPage(int page, JPanel panel) {
         panel.removeAll();
         switch (page) {
             case 0:
                 panel.setLayout(new FlowLayout(FlowLayout.LEFT));
                 panel.add(new JLabel("Grid Size:"));
-                JTextField gridfield = new JTextField(String.valueOf(Renderer.window.getGridSize()), 15);
+                gridfield = new JTextField(String.valueOf(Renderer.window.getGridSize()), 15);
                 panel.add(gridfield);
-                panel.add(new JLabel("Show grid:"));
+                showgrid = new JCheckBox("Show grid", Renderer.window.isGridShowing());
+                panel.add(showgrid);
                 break;
             case 1:
                 panel.setLayout(new GridLayout(0, 2));
@@ -88,14 +107,34 @@ public class SettingsDialog implements iDialogInfo {
             listpane.setBackground(Color.LIGHT_GRAY);
 
             for (Team team : TeamHandler.teams) {
-                JPanel teampanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                TeamPanel teampanel = new TeamPanel(team);
+                teampanel.setLayout(new FlowLayout(FlowLayout.LEFT));
                 teampanel.setBackground(Color.GRAY);
                 teampanel.setMaximumSize(new Dimension(500, 50));
                 teampanel.add(new JLabel(team.getName()));
+
                 JPanel coloricon = new JPanel();
                 coloricon.setPreferredSize(new Dimension(30, 30));
                 coloricon.setBackground(team.getColor());
                 teampanel.add(coloricon);
+
+                JButton editbutton = new JButton("Edit");
+                editbutton.setFocusable(false);
+                editbutton.addActionListener(_ -> {
+                    teamselector = TeamHandler.teams.indexOf(teampanel.getTeam());
+                    namefield.setText(team.getName());
+                    currentColor = team.getColor();
+                    colorvisual.setBackground(currentColor);
+                    R_Slider.setValue(currentColor.getRed());
+                    G_Slider.setValue(currentColor.getGreen());
+                    B_Slider.setValue(currentColor.getBlue());
+                });
+
+                JButton removebutton = new JButton("Remove");
+                removebutton.setFocusable(false);
+
+                teampanel.add(editbutton);
+                teampanel.add(removebutton);
                 listpane.add(teampanel, Component.LEFT_ALIGNMENT);
                 listpane.add(Box.createRigidArea(new Dimension(0, 10)));
             }
@@ -107,15 +146,69 @@ public class SettingsDialog implements iDialogInfo {
             JPanel edittop = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
             JButton createteambtn = new JButton("Create Team");
-            createteambtn.addActionListener(e -> {
+            createteambtn.addActionListener(_ -> {
                 if (TeamHandler.insideLimit()) {
                     Team team = new Team();
                     TeamHandler.teams.add(team);
                 }
-                buildContents(1, root);
+                buildPage(1, root);
+            });
+            JButton applybutton = new JButton("Apply changes");
+            applybutton.addActionListener(_ -> {
+                TeamHandler.teams.get(teamselector).setName(namefield.getText());
+                TeamHandler.teams.get(teamselector).setColor(currentColor);
+                System.out.println(TeamHandler.teams.get(teamselector));
+                buildPage(1, root);
             });
             edittop.add(createteambtn);
+            edittop.add(applybutton);
             editpane.add(edittop, BorderLayout.PAGE_START);
+            editpane.add(new JPanel(), BorderLayout.CENTER);
+
+            JPanel editbottom =  new JPanel();
+            editbottom.setBackground(Color.DARK_GRAY);
+            editbottom.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // margins
+            editbottom.setLayout(new BoxLayout(editbottom, BoxLayout.Y_AXIS));
+
+            namefield = new JTextField(TeamHandler.teams.get(teamselector).getName(), 15);
+            JPanel colorpanel = new JPanel();
+
+            colorpanel.setLayout(new BorderLayout(5, 5));
+            colorvisual = new JPanel();
+            colorvisual.setPreferredSize(new Dimension(50, 50));
+            currentColor = TeamHandler.teams.get(teamselector).getColor();
+            colorvisual.setBackground(currentColor);
+            JPanel slidercontainer = new JPanel(new GridLayout(3, 2));
+
+            R_Slider = new JSlider(0, 255, currentColor.getRed());
+            R_Slider.addChangeListener(_ -> {
+                currentColor = new Color(R_Slider.getValue(), currentColor.getGreen(), currentColor.getBlue());
+                colorvisual.setBackground(currentColor);
+            });
+            G_Slider = new JSlider(0, 255, currentColor.getGreen());
+            G_Slider.addChangeListener(_ -> {
+                currentColor  = new Color(currentColor.getRed(), G_Slider.getValue(), currentColor.getBlue());
+                colorvisual.setBackground(currentColor);
+            });
+            B_Slider = new JSlider(0, 255, currentColor.getBlue());
+            B_Slider.addChangeListener(_ -> {
+                currentColor = new Color(currentColor.getRed(), currentColor.getGreen(), B_Slider.getValue());
+                colorvisual.setBackground(currentColor);
+            });
+            slidercontainer.add(R_Slider);
+            slidercontainer.add(G_Slider);
+            slidercontainer.add(B_Slider);
+
+            colorpanel.add(slidercontainer, BorderLayout.LINE_START);
+            colorpanel.add(new JPanel(), BorderLayout.CENTER);
+            colorpanel.add(colorvisual, BorderLayout.LINE_END);
+
+            editbottom.add(namefield);
+            editbottom.add(Box.createVerticalStrut(15));
+            editbottom.add(colorpanel);
+
+            editpane.add(editbottom, BorderLayout.PAGE_END);
+
             return editpane;
         }
     }

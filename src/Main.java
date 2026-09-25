@@ -1,14 +1,7 @@
 import io.gui.GuiHandler;
-import io.Renderer;
+import io.renderer.Renderer;
 import time.Tick;
-import tree.card.Card;
-import tree.card.CardSizeTypes;
-import tree.card.Duration;
 import tree.team.TeamHandler;
-import tree.TreeHandler;
-import utils.Vector2i;
-
-import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {

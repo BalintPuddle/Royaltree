@@ -1,4 +1,4 @@
-package io;
+package io.gui;
 
 import javax.swing.*;
 

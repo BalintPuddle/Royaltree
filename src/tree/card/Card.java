@@ -1,9 +1,9 @@
 package tree.card;
 
-import io.Renderer;
+import io.gui.BoxPanel;
+import io.renderer.Renderer;
 import scene.Entity;
 import tree.line.LineMode;
-import tree.TreeHandler;
 import tree.team.Team;
 import utils.Vector2i;
 
@@ -30,7 +30,7 @@ public class Card extends Entity {
         this.parents = new ArrayList<>();
         this.children = new ArrayList<>();
 
-        panel = Renderer.window.createBoxPanel(
+        panel = new BoxPanel(
                 position.x,
                 position.y,
                 team.getColor(),
@@ -54,7 +54,7 @@ public class Card extends Entity {
         this.header = "New Card";
         this.duration = new Duration(0, 0);
 
-        panel = Renderer.window.createBoxPanel(
+        panel = new BoxPanel(
                 position.x,
                 position.y,
                 team.getColor(),
@@ -83,6 +83,7 @@ public class Card extends Entity {
                 }
             }
         }
+        panel.setBackground(team.getColor());
     }
 
     public String getId() {

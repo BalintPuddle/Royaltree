@@ -1,4 +1,4 @@
-package io;
+package io.renderer;
 
 import scene.Scene;
 
@@ -9,5 +9,9 @@ public class Renderer {
     public static void render() {
         window = new Window();
         scene = new Scene(window);
+    }
+
+    public static void refresh() {
+        window.refresh();
     }
 }

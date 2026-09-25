@@ -1,81 +1,99 @@
 package io.gui;
 
-import io.Renderer;
+import io.renderer.Renderer;
 import tree.card.Card;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class GuiHandler {
     public static JLabel cordsLabel;
-    private static JButton moveButton, editbutton, connectiontool, settings;
+    private static JButton moveButton, addButton, editButton, connectionButton, settingsButton;
 
     private static InteractionMode mode;
 
     public static void init() {
-        GuiPanel toolpanel = new GuiPanel();
-        toolpanel.setSize(io.Renderer.window.getWidth(), 30);
-        toolpanel.setLocation(0, 0);
-        toolpanel.setLayout(new BoxLayout(toolpanel, BoxLayout.X_AXIS));
-        toolpanel.setBackground(Color.GRAY);
-        toolpanel.setVisible(true);
+        GuiPanel sidebar = new GuiPanel();
+        sidebar.setSize(60, Renderer.window.getHeight()/4);
+        sidebar.setLocation(10, 10);
+        sidebar.setLayout(new GridLayout(4, 1, 0, 1));
+        sidebar.setBackground(Color.GRAY);
+        sidebar.setVisible(true);
+
+        addButtons(sidebar);
 
         cordsLabel = new JLabel("0 0");
-        cordsLabel.setSize(toolpanel.getWidth(), toolpanel.getHeight());
-        cordsLabel.setForeground(Color.white);
+        cordsLabel.setSize(100, 100);
+        cordsLabel.setForeground(Color.BLACK);
+        cordsLabel.setLocation(Renderer.window.getWidth()-100, 0);
 
-        moveButton = new JButton("Move");
+        Renderer.window.addPanel(sidebar);
+        Renderer.window.getContainer().add(cordsLabel);
+        Renderer.refresh();
+
+        mode = InteractionMode.MOVE;
+    }
+
+    private static void addButtons(GuiPanel toolpanel) {
+        moveButton = new JButton("M");
         moveButton.setFocusable(false);
         moveButton.setEnabled(false);
+
+        addButton = new JButton("A");
+        addButton.setFocusable(false);
+
+        editButton = new JButton("E");
+        editButton.setFocusable(false);
+
+        connectionButton = new JButton("C");
+        connectionButton.setFocusable(false);
+
+        ArrayList<JButton> buttons = new ArrayList<>();
+        buttons.add(moveButton);
+        buttons.add(addButton);
+        buttons.add(editButton);
+        buttons.add(connectionButton);
+
+
+        //CLICK ACTION LISTENERS -------------------------------------------
+
         moveButton.addActionListener(e -> {
             System.out.println("Move button pressed");
             setMode(InteractionMode.MOVE);
-            moveButton.setEnabled(false);
-            editbutton.setEnabled(true);
-            connectiontool.setEnabled(true);
-            connectiontool.setEnabled(true);
+            toggleButtonVisuals(buttons, 0);
         });
-        editbutton = new JButton("Edit");
-        editbutton.setFocusable(false);
-        editbutton.addActionListener(e -> {
+
+        addButton.addActionListener(e -> {
+            System.out.println("Add button pressed");
+            setMode(InteractionMode.ADD);
+            toggleButtonVisuals(buttons, 1);
+        });
+
+        editButton.addActionListener(e -> {
             System.out.println("Edit button pressed");
             setMode(InteractionMode.EDIT);
-            moveButton.setEnabled(true);
-            editbutton.setEnabled(false);
-            connectiontool.setEnabled(true);
+            toggleButtonVisuals(buttons, 2);
         });
-        connectiontool = new JButton("Connection");
-        connectiontool.setFocusable(false);
-        connectiontool.addActionListener(e -> {
+
+        connectionButton.addActionListener(e -> {
             System.out.println("Connection button pressed");
             setMode(InteractionMode.CONNECT);
-            moveButton.setEnabled(true);
-            editbutton.setEnabled(true);
-            connectiontool.setEnabled(false);
-        });
-        settings = new JButton("Settings");
-        settings.setFocusable(false);
-        settings.addActionListener(e -> {
-            System.out.println("Settings button pressed");
-            Renderer.window.createDialog("Global Settings", Renderer.window.getWidthPercent(45), Renderer.window.getHeightPercent(40f), new SettingsDialog(), null);
+            toggleButtonVisuals(buttons, 3);
         });
 
-        toolpanel.add(Box.createRigidArea(new Dimension(io.Renderer.window.getWidthPercent(1f), 0)));
+        //settingsButton.addActionListener(e -> {
+        //    System.out.println("Settings button pressed");
+        //    Renderer.window.createDialog("Global Settings", Renderer.window.getWidthPercent(45), Renderer.window.getHeightPercent(40f), new SettingsDialog(), null);
+        //});
+
         toolpanel.add(moveButton);
-        toolpanel.add(Box.createRigidArea(new Dimension(io.Renderer.window.getWidthPercent(0.1f), 0)));
-        toolpanel.add(editbutton);
-        toolpanel.add(Box.createRigidArea(new Dimension(io.Renderer.window.getWidthPercent(0.1f), 0)));
-        toolpanel.add(connectiontool);
-        toolpanel.add(Box.createRigidArea(new Dimension(io.Renderer.window.getWidthPercent(0.1f), 0)));
-        toolpanel.add(settings);
-        toolpanel.add(Box.createHorizontalGlue());
-        toolpanel.add(cordsLabel);
-        toolpanel.add(Box.createRigidArea(new Dimension(30, 0)));
-
-        io.Renderer.window.refresh();
-        Renderer.window.addPanel(toolpanel);
-
-        mode = InteractionMode.MOVE;
+        toolpanel.add(addButton);
+        toolpanel.add(editButton);
+        toolpanel.add(connectionButton);
+        //toolpanel.add(settingsButton);
+        toolpanel.setBorder(BorderFactory.createLineBorder(Color.black));
     }
 
     public static void openCardEditor(Card card) {
@@ -88,5 +106,16 @@ public class GuiHandler {
 
     public static void setMode(InteractionMode mode) {
         GuiHandler.mode = mode;
+    }
+
+    public static void toggleButtonVisuals(ArrayList<JButton> buttons, int index) {
+        for (JButton button : buttons) {
+            if (button == buttons.get(index)) {
+                button.setEnabled(false);
+            }
+            else {
+                button.setEnabled(true);
+            }
+        }
     }
 }

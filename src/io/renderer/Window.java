@@ -1,5 +1,8 @@
-package io;
+package io.renderer;
 
+import io.gui.SettingsDialog;
+import io.input.Input;
+import io.gui.InteractablePanel;
 import io.gui.iDialogInfo;
 import tree.card.CardSizeTypes;
 import utils.Vector2i;
@@ -16,6 +19,7 @@ public class Window {
     private final int HEIGHT = 1000;
 
     private int GRID_SIZE = 20;
+    private boolean showGrid;
 
     public Window() {
         createWindow();
@@ -33,47 +37,53 @@ public class Window {
         Input input = new Input();
         frame.addKeyListener(input);
         frame.addMouseListener(input);
+        frame.setJMenuBar(createMenubar());
         frame.setVisible(true);
 
+        showGrid = true;
         frame.setContentPane(new WindowPanel(getGridSize()));
         container = frame.getContentPane();
+        frame.requestFocus();
     }
 
-    public JPanel createBoxPanel(int x, int y, Color color, Vector2i size, String label0, String label1) {
-        JPanel panel = new InteractablePanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    private static JMenuBar createMenubar() {
+        //Sets up the top of the screen menu bar and its submenus
+        JMenuBar bar = new JMenuBar();
+        JMenu filemenu = new JMenu("File");
+        JMenu editmenu = new JMenu("Edit");
+        JMenu aboutmenu = new JMenu("About");
+        JMenu helpmenu = new JMenu("Help");
 
-        if (size != null) {
-            panel.setSize(size.x, size.y);
-        }
-        else {
-            panel.setSize(CardSizeTypes.SMALL.x, CardSizeTypes.SMALL.y);
-        }
+        // [FILE] --> MENU ITEMS
 
-        panel.setLocation(x, y);
-        panel.setBackground(color);
-        panel.setVisible(true);
-        panel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+            JMenuItem newproject = new JMenuItem("New Project");
+            JMenuItem open = new JMenuItem("Open Project");
+            JMenuItem save = new JMenuItem("Save Project");
+            JMenuItem exit = new JMenuItem("Exit");
 
-        JLabel header = new JLabel(label0, JLabel.CENTER);
-        header.setAlignmentX(Component.CENTER_ALIGNMENT);
-        header.setSize(panel.getWidth(), panel.getHeight());
-        header.setForeground(Color.white);
+            exit.addActionListener(_ -> System.exit(0));
 
+            filemenu.add(newproject);
+            filemenu.add(open);
+            filemenu.add(save);
+            filemenu.add(exit);
 
-        JLabel duration = new JLabel(label1, JLabel.CENTER);
-        duration.setAlignmentX(Component.CENTER_ALIGNMENT);
-        duration.setSize(panel.getWidth(), panel.getHeight());
-        duration.setForeground(Color.white);
+        // [EDIT] --> MENU ITEMS
 
-        panel.add(Box.createRigidArea(new Dimension(0, panel.getHeight()/4)));
-        panel.add(header);
-        panel.add(Box.createVerticalGlue());
-        panel.add(duration);
-        panel.add(Box.createRigidArea(new Dimension(0, panel.getHeight()/4)));
+            JMenuItem settings = new JMenuItem("Settings");
 
-        refresh();
-        return panel;
+            settings.addActionListener(_ ->
+                    Renderer.window.createDialog("Global Settings", Renderer.window.getWidthPercent(45), Renderer.window.getHeightPercent(40f), new SettingsDialog(), null));
+
+            editmenu.add(settings);
+
+        //====================================================
+        //Adding all the menus  to the bar
+        bar.add(filemenu);
+        bar.add(editmenu);
+        bar.add(aboutmenu);
+        bar.add(helpmenu);
+        return bar;
     }
 
     public <T> void createDialog(String title, int width, int height, iDialogInfo info, T modifiable) {
@@ -120,8 +130,8 @@ public class Window {
 
     public Vector2i PositionToGrid (Vector2i position) {
         Vector2i vector = new Vector2i(
-                (int) Math.floor((double) position.x / ((double) WIDTH / GRID_SIZE)),
-                (int) Math.floor((double) position.y / ((double) HEIGHT / GRID_SIZE))
+                position.x / (WIDTH / GRID_SIZE),
+                position.y / (HEIGHT / GRID_SIZE)
         );
         return vector;
     }
@@ -136,8 +146,8 @@ public class Window {
 
     public Vector2i PositionToGridPosition(Vector2i position) {
         return Renderer.scene.worldToScreenSpace(
-                (int) Math.floor((double) position.x / ((double) WIDTH / GRID_SIZE)) * (WIDTH / GRID_SIZE),
-                (int) Math.floor((double) position.y / ((double) HEIGHT / GRID_SIZE)) * (HEIGHT / GRID_SIZE)
+                position.x / (WIDTH / GRID_SIZE) * (WIDTH / GRID_SIZE),
+                position.y / (HEIGHT / GRID_SIZE) * (HEIGHT / GRID_SIZE)
         );
     }
 
@@ -184,5 +194,17 @@ public class Window {
 
     public int getHeightPercent(float percent) {
         return (int) (HEIGHT * (percent/100));
+    }
+
+    public void setGridSize(int size) {
+        this.GRID_SIZE = size;
+    }
+
+    public boolean isGridShowing() {
+        return showGrid;
+    }
+
+    public void setShowGrid(boolean showGrid) {
+        this.showGrid = showGrid;
     }
 }

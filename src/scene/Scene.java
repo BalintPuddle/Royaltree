@@ -1,8 +1,8 @@
 package scene;
 
 import io.Camera;
-import io.Renderer;
-import io.Window;
+import io.renderer.Renderer;
+import io.renderer.Window;
 import utils.Vector2i;
 
 import java.util.ArrayList;

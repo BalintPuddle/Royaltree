@@ -1,10 +1,12 @@
-package io;
+package io.input;
 
+import io.gui.InteractablePanel;
 import io.gui.GuiHandler;
 import io.gui.InteractionMode;
-import tree.*;
+import io.renderer.Renderer;
 import tree.card.Card;
 import tree.card.CardSizeTypes;
+import tree.card.TreeHandler;
 import tree.team.TeamHandler;
 import utils.Vector2i;
 
@@ -36,16 +38,16 @@ public class Input implements KeyListener, MouseListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyChar() == 'w') {
-            Renderer.scene.transformAll(0, -MOVE_SPEED);
+            io.renderer.Renderer.scene.transformAll(0, -MOVE_SPEED);
         }
         if (e.getKeyChar() == 's') {
-            Renderer.scene.transformAll(0, MOVE_SPEED);
+            io.renderer.Renderer.scene.transformAll(0, MOVE_SPEED);
         }
         if (e.getKeyChar() == 'a') {
-            Renderer.scene.transformAll(-MOVE_SPEED, 0);
+            io.renderer.Renderer.scene.transformAll(-MOVE_SPEED, 0);
         }
         if (e.getKeyChar() == 'd') {
-            Renderer.scene.transformAll(MOVE_SPEED, 0);
+            io.renderer.Renderer.scene.transformAll(MOVE_SPEED, 0);
         }
 
         if (e.getKeyChar() == 'e') {
@@ -53,7 +55,7 @@ public class Input implements KeyListener, MouseListener {
 
             TreeHandler.addCard(
                     "card_" + (TreeHandler.getCards().size() - 1),
-                    Renderer.window.PositionToGrid(new Vector2i(point.x, point.y)),
+                    io.renderer.Renderer.window.PositionToGrid(new Vector2i(point.x, point.y)),
                     TeamHandler.getdefault(),
                     CardSizeTypes.SMALL
             );
@@ -76,7 +78,7 @@ public class Input implements KeyListener, MouseListener {
     public void mousePressed(MouseEvent e) {
         if (GuiHandler.getMode() == InteractionMode.MOVE) {
             if (e.getButton() == 1) {
-                Component component = Renderer.window.getComponentAt(e.getX(), e.getY());
+                Component component = io.renderer.Renderer.window.getComponentAt(e.getX(), e.getY());
                 if (component instanceof InteractablePanel) {
                     selectedComponent = component;
                     selectedWidth = component.getWidth();
@@ -85,9 +87,21 @@ public class Input implements KeyListener, MouseListener {
                 }
             }
         }
+        else if (GuiHandler.getMode() == InteractionMode.ADD) {
+            if (e.getButton() == 1) {
+                Point point = MouseInfo.getPointerInfo().getLocation();
+
+                TreeHandler.addCard(
+                        "card_" + (TreeHandler.getCards().size() - 1),
+                        io.renderer.Renderer.window.PositionToGrid(new Vector2i(point.x, point.y)),
+                        TeamHandler.getdefault(),
+                        CardSizeTypes.SMALL
+                );
+            }
+        }
         else if (GuiHandler.getMode() == InteractionMode.EDIT) {
             if (e.getButton() == 1) {
-                Component component = Renderer.window.getComponentAt(e.getX(), e.getY());
+                Component component = io.renderer.Renderer.window.getComponentAt(e.getX(), e.getY());
                 if (component instanceof InteractablePanel) {
                     selectedComponent = component;
                     GuiHandler.openCardEditor(TreeHandler.getCardByPanel((JPanel) selectedComponent));
@@ -96,14 +110,14 @@ public class Input implements KeyListener, MouseListener {
         }
         else if (GuiHandler.getMode() == InteractionMode.CONNECT) {
             if (e.getButton() == 1) {
-                Component component = Renderer.window.getComponentAt(e.getX(), e.getY());
+                Component component = io.renderer.Renderer.window.getComponentAt(e.getX(), e.getY());
                 if (component instanceof InteractablePanel) {
                     selectedComponent = component;
                     connectionPair[0] = TreeHandler.getCardByPanel((JPanel) selectedComponent);
                 }
             }
             else if (e.getButton() == 3) {
-                Component component = Renderer.window.getComponentAt(e.getX(), e.getY());
+                Component component = io.renderer.Renderer.window.getComponentAt(e.getX(), e.getY());
                 if (component instanceof InteractablePanel) {
                     selectedComponent = component;
                     connectionPair[1] = TreeHandler.getCardByPanel((JPanel) selectedComponent);
@@ -133,7 +147,7 @@ public class Input implements KeyListener, MouseListener {
 
     public static void moveComponentToMouse() {
         try {
-            Vector2i newPos = Renderer.window.PositionToGridPosition(Renderer.scene.screenToWorldSpace(
+            Vector2i newPos = io.renderer.Renderer.window.PositionToGridPosition(Renderer.scene.screenToWorldSpace(
                     MouseInfo.getPointerInfo().getLocation().x - selectedWidth/2,
                     MouseInfo.getPointerInfo().getLocation().y - selectedHeight/2)
             );
