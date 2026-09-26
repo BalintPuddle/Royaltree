@@ -51,14 +51,7 @@ public class Input implements KeyListener, MouseListener {
         }
 
         if (e.getKeyChar() == 'e') {
-            Point point = MouseInfo.getPointerInfo().getLocation();
-
-            TreeHandler.addCard(
-                    "card_" + (TreeHandler.getCards().size() - 1),
-                    io.renderer.Renderer.window.PositionToGrid(new Vector2i(point.x, point.y)),
-                    TeamHandler.getdefault(),
-                    CardSizeTypes.SMALL
-            );
+            createCardAtPoint(MouseInfo.getPointerInfo().getLocation());
         }
     }
 
@@ -89,14 +82,7 @@ public class Input implements KeyListener, MouseListener {
         }
         else if (GuiHandler.getMode() == InteractionMode.ADD) {
             if (e.getButton() == 1) {
-                Point point = MouseInfo.getPointerInfo().getLocation();
-
-                TreeHandler.addCard(
-                        "card_" + (TreeHandler.getCards().size() - 1),
-                        io.renderer.Renderer.window.PositionToGrid(new Vector2i(point.x, point.y)),
-                        TeamHandler.getdefault(),
-                        CardSizeTypes.SMALL
-                );
+                createCardAtPoint(MouseInfo.getPointerInfo().getLocation());
             }
         }
         else if (GuiHandler.getMode() == InteractionMode.EDIT) {
@@ -145,11 +131,22 @@ public class Input implements KeyListener, MouseListener {
 
     }
 
+    private static void createCardAtPoint(Point point) {
+        TreeHandler.addCard(
+                "card_" + (TreeHandler.getCards().size() - 1),
+                io.renderer.Renderer.window.PositionToGrid(new Vector2i(
+                        point.x - Renderer.window.getWindowScrenLocation().x,
+                        point.y - Renderer.window.getWindowScrenLocation().y)),
+                TeamHandler.getdefault(),
+                CardSizeTypes.SMALL
+        );
+    }
+
     public static void moveComponentToMouse() {
         try {
             Vector2i newPos = io.renderer.Renderer.window.PositionToGridPosition(Renderer.scene.screenToWorldSpace(
-                    MouseInfo.getPointerInfo().getLocation().x - selectedWidth/2,
-                    MouseInfo.getPointerInfo().getLocation().y - selectedHeight/2)
+                    MouseInfo.getPointerInfo().getLocation().x - selectedWidth/2 - Renderer.window.getWindowScrenLocation().x,
+                    MouseInfo.getPointerInfo().getLocation().y - selectedHeight/2 - Renderer.window.getWindowScrenLocation().y)
             );
             if (selectedComponent != null) {
                 selectedComponent.setLocation(newPos.x, newPos.y);

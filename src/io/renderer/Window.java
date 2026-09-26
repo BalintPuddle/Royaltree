@@ -1,9 +1,11 @@
 package io.renderer;
 
+import io.gui.GuiHandler;
 import io.gui.SettingsDialog;
 import io.input.Input;
 import io.gui.InteractablePanel;
 import io.gui.iDialogInfo;
+import scene.Scene;
 import tree.card.CardSizeTypes;
 import utils.Vector2i;
 
@@ -41,12 +43,12 @@ public class Window {
         frame.setVisible(true);
 
         showGrid = true;
-        frame.setContentPane(new WindowPanel(getGridSize()));
+        frame.setContentPane(new WindowPanel(GRID_SIZE, WIDTH));
         container = frame.getContentPane();
         frame.requestFocus();
     }
 
-    private static JMenuBar createMenubar() {
+    private JMenuBar createMenubar() {
         //Sets up the top of the screen menu bar and its submenus
         JMenuBar bar = new JMenuBar();
         JMenu filemenu = new JMenu("File");
@@ -61,6 +63,13 @@ public class Window {
             JMenuItem save = new JMenuItem("Save Project");
             JMenuItem exit = new JMenuItem("Exit");
 
+            newproject.addActionListener(_ -> {
+                Renderer.scene = new Scene(this);
+                getContainer().removeAll();
+                getContainer().revalidate();
+                getContainer().repaint();
+                GuiHandler.init();
+            });
             exit.addActionListener(_ -> System.exit(0));
 
             filemenu.add(newproject);
@@ -131,15 +140,16 @@ public class Window {
     public Vector2i PositionToGrid (Vector2i position) {
         Vector2i vector = new Vector2i(
                 position.x / (WIDTH / GRID_SIZE),
-                position.y / (HEIGHT / GRID_SIZE)
+                position.y / (WIDTH / GRID_SIZE)
         );
+        System.out.println(vector.x + " " + vector.y);
         return vector;
     }
 
     public Vector2i GridToPosition (Vector2i gridPosition) {
         Vector2i vector = new Vector2i(
                 gridPosition.x * (WIDTH / GRID_SIZE),
-                gridPosition.y * (HEIGHT / GRID_SIZE)
+                gridPosition.y * (WIDTH / GRID_SIZE)
         );
         return vector;
     }
@@ -147,7 +157,7 @@ public class Window {
     public Vector2i PositionToGridPosition(Vector2i position) {
         return Renderer.scene.worldToScreenSpace(
                 position.x / (WIDTH / GRID_SIZE) * (WIDTH / GRID_SIZE),
-                position.y / (HEIGHT / GRID_SIZE) * (HEIGHT / GRID_SIZE)
+                position.y / (WIDTH / GRID_SIZE) * (WIDTH / GRID_SIZE)
         );
     }
 
@@ -206,5 +216,9 @@ public class Window {
 
     public void setShowGrid(boolean showGrid) {
         this.showGrid = showGrid;
+    }
+
+    public Point getWindowScrenLocation() {
+        return frame.getLocationOnScreen();
     }
 }

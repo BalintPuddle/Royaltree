@@ -65,7 +65,7 @@ public class SettingsDialog implements iDialogInfo {
             case 0:
                 Renderer.window.setGridSize(Integer.parseInt(gridfield.getText()));
                 WindowPanel windowPanel = (WindowPanel) Renderer.window.getContainer();
-                windowPanel.updateGrid(Integer.parseInt(gridfield.getText()));
+                windowPanel.updateGrid(Renderer.window.getWidth(), Integer.parseInt(gridfield.getText()));
 
                 Renderer.window.setShowGrid(showgrid.isSelected());
                 break;

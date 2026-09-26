@@ -7,9 +7,9 @@ import java.awt.*;
 
 public class WindowPanel extends JPanel {
     int GRID_SIZE;
-    public WindowPanel(int gridsize) {
+    public WindowPanel(int gridsize, int width) {
         super(null, true);
-        this.GRID_SIZE = (int) (gridsize * 2.5);
+        this.GRID_SIZE = width / gridsize;
         setOpaque(true);
     }
 
@@ -35,8 +35,8 @@ public class WindowPanel extends JPanel {
         }
     }
 
-    public void updateGrid(int gridsize) {
-        this.GRID_SIZE = (int) (gridsize * 2.5);
+    public void updateGrid(int width, int gridsize) {
+        this.GRID_SIZE = width / gridsize;
         setOpaque(true);
         repaint();
     }
