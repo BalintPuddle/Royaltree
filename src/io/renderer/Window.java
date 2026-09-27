@@ -16,7 +16,8 @@ public class Window {
     private JFrame frame;
     private Container container;
 
-    private final String TITLE = "Royaltree Beta";
+    private final String VERSION = "0.2";
+    private final String TITLE = "Royaltree Beta " + VERSION;
     private final int WIDTH = 2000;
     private final int HEIGHT = 1000;
 

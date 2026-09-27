@@ -1,5 +1,6 @@
 package io.input;
 
+import io.Camera;
 import io.gui.InteractablePanel;
 import io.gui.GuiHandler;
 import io.gui.InteractionMode;
@@ -38,20 +39,23 @@ public class Input implements KeyListener, MouseListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyChar() == 'w') {
-            io.renderer.Renderer.scene.transformAll(0, -MOVE_SPEED);
+            Renderer.scene.transformAll(0, -MOVE_SPEED);
         }
         if (e.getKeyChar() == 's') {
-            io.renderer.Renderer.scene.transformAll(0, MOVE_SPEED);
+            Renderer.scene.transformAll(0, MOVE_SPEED);
         }
         if (e.getKeyChar() == 'a') {
-            io.renderer.Renderer.scene.transformAll(-MOVE_SPEED, 0);
+            Renderer.scene.transformAll(-MOVE_SPEED, 0);
         }
         if (e.getKeyChar() == 'd') {
-            io.renderer.Renderer.scene.transformAll(MOVE_SPEED, 0);
+            Renderer.scene.transformAll(MOVE_SPEED, 0);
         }
 
         if (e.getKeyChar() == 'e') {
             createCardAtPoint(MouseInfo.getPointerInfo().getLocation());
+        }
+        if (e.getKeyChar() == 'c') {
+            Renderer.scene.transformAll(-Camera.x, -Camera.y);
         }
     }
 

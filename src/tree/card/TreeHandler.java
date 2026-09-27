@@ -211,4 +211,8 @@ public class TreeHandler {
     public static LineMode getMode() {
         return mode;
     }
+
+    public static void setMode(LineMode mode) {
+        TreeHandler.mode = mode;
+    }
 }

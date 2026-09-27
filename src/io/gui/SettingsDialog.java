@@ -3,6 +3,7 @@ package io.gui;
 import io.renderer.Renderer;
 import io.renderer.WindowPanel;
 import tree.card.TreeHandler;
+import tree.line.LineMode;
 import tree.team.Team;
 import tree.team.TeamHandler;
 
@@ -17,6 +18,7 @@ public class SettingsDialog implements iDialogInfo {
     private JPanel colorvisual;
     private Color currentColor;
     private JSlider R_Slider, G_Slider, B_Slider;
+    private JComboBox lineModesBox;
 
     @Override
     public <T> void create(JPanel panel, T modifiable) {
@@ -72,6 +74,19 @@ public class SettingsDialog implements iDialogInfo {
             case 1:
                 TreeHandler.updateAllCards();
                 break;
+            case 2:
+                switch (lineModesBox.getSelectedItem().toString()) {
+                    case "HIGH CENTER":
+                        TreeHandler.setMode(LineMode.HIGH_CENTER);
+                        break;
+                    case "LOW CENTER":
+                        TreeHandler.setMode(LineMode.LOW_CENTER);
+                        break;
+                    case "CENTER":
+                        TreeHandler.setMode(LineMode.CENTER);
+                        break;
+                }
+                break;
         }
     }
 
@@ -79,12 +94,16 @@ public class SettingsDialog implements iDialogInfo {
         panel.removeAll();
         switch (page) {
             case 0:
-                panel.setLayout(new FlowLayout(FlowLayout.LEFT));
-                panel.add(new JLabel("Grid Size:"));
+                panel.setLayout(new GridLayout(1,2));
+                OptionPanel options = new OptionPanel(8);
+                panel.add(options);
+
+                options.get(0).add(new JLabel("Grid Size:"));
                 gridfield = new JTextField(String.valueOf(Renderer.window.getGridSize()), 15);
-                panel.add(gridfield);
+                options.get(0).add(gridfield);
                 showgrid = new JCheckBox("Show grid", Renderer.window.isGridShowing());
-                panel.add(showgrid);
+                options.get(1).add(showgrid);
+
                 break;
             case 1:
                 panel.setLayout(new GridLayout(0, 2));
@@ -93,6 +112,21 @@ public class SettingsDialog implements iDialogInfo {
                 panel.add(buildTeamSection(1, panel));
                 break;
             case 2:
+                panel.setLayout(new GridLayout(1,2));
+                OptionPanel lineoptions = new OptionPanel(8);
+                panel.add(lineoptions);
+
+                String[] lineModes = {"HIGH CENTER", "LOW CENTER", "CENTER"};
+                JLabel label = new JLabel("Line Mode:");
+                lineoptions.get(0).add(label);
+                lineModesBox = new JComboBox<>(lineModes);
+                switch (TreeHandler.getMode()) {
+                    case HIGH_CENTER -> lineModesBox.setSelectedIndex(0);
+                    case LOW_CENTER -> lineModesBox.setSelectedIndex(1);
+                    case CENTER -> lineModesBox.setSelectedIndex(2);
+                }
+                lineoptions.get(0).add(lineModesBox);
+
                 break;
         }
 
@@ -171,37 +205,50 @@ public class SettingsDialog implements iDialogInfo {
             editbottom.setLayout(new BoxLayout(editbottom, BoxLayout.Y_AXIS));
 
             namefield = new JTextField(TeamHandler.teams.get(teamselector).getName(), 15);
+
+            //COLOR PANEL ---------------------------------------
             JPanel colorpanel = new JPanel();
 
             colorpanel.setLayout(new BorderLayout(5, 5));
+
             colorvisual = new JPanel();
             colorvisual.setPreferredSize(new Dimension(50, 50));
             currentColor = TeamHandler.teams.get(teamselector).getColor();
             colorvisual.setBackground(currentColor);
-            JPanel slidercontainer = new JPanel(new GridLayout(3, 2));
+
+            JPanel slidercontainer = new JPanel(new GridLayout(3, 2, 10, 0));
+            JLabel RLabel = new JLabel("R: " + currentColor.getRed());
+            JLabel GLabel = new JLabel("G: " + currentColor.getGreen());
+            JLabel BLabel = new JLabel("B: " + currentColor.getBlue());
+
 
             R_Slider = new JSlider(0, 255, currentColor.getRed());
             R_Slider.addChangeListener(_ -> {
                 currentColor = new Color(R_Slider.getValue(), currentColor.getGreen(), currentColor.getBlue());
                 colorvisual.setBackground(currentColor);
+                RLabel.setText("R: " + currentColor.getRed());
             });
             G_Slider = new JSlider(0, 255, currentColor.getGreen());
             G_Slider.addChangeListener(_ -> {
                 currentColor  = new Color(currentColor.getRed(), G_Slider.getValue(), currentColor.getBlue());
                 colorvisual.setBackground(currentColor);
+                GLabel.setText("R: " + currentColor.getGreen());
             });
             B_Slider = new JSlider(0, 255, currentColor.getBlue());
             B_Slider.addChangeListener(_ -> {
                 currentColor = new Color(currentColor.getRed(), currentColor.getGreen(), B_Slider.getValue());
                 colorvisual.setBackground(currentColor);
+                BLabel.setText("R: " + currentColor.getBlue());
             });
             slidercontainer.add(R_Slider);
+            slidercontainer.add(RLabel);
             slidercontainer.add(G_Slider);
+            slidercontainer.add(GLabel);
             slidercontainer.add(B_Slider);
+            slidercontainer.add(BLabel);
 
-            colorpanel.add(slidercontainer, BorderLayout.LINE_START);
-            colorpanel.add(new JPanel(), BorderLayout.CENTER);
-            colorpanel.add(colorvisual, BorderLayout.LINE_END);
+            colorpanel.add(slidercontainer, BorderLayout.CENTER);
+            colorpanel.add(colorvisual, BorderLayout.EAST);
 
             editbottom.add(namefield);
             editbottom.add(Box.createVerticalStrut(15));

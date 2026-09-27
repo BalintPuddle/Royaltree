@@ -72,7 +72,7 @@ public class LinePanel extends JPanel {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         g2.setColor(color);
-        g2.setStroke(new BasicStroke(4));
+        g2.setStroke(new BasicStroke(LINEWIDTH));
         g.drawLine(positons.x, positons.y, positons.z, positons.w);
     }
 

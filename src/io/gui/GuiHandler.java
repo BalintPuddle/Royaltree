@@ -28,7 +28,7 @@ public class GuiHandler {
         cordsLabel = new JLabel("0 0");
         cordsLabel.setSize(100, 100);
         cordsLabel.setForeground(Color.BLACK);
-        cordsLabel.setLocation(100, Renderer.window.getHeight()/2);
+        cordsLabel.setLocation(Renderer.window.getWidth()/50, (int) (Renderer.window.getHeight()/1.4));
 
         Renderer.window.addPanel(sidebar);
         Renderer.window.getContainer().add(cordsLabel);
