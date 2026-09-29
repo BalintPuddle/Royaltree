@@ -1,9 +1,10 @@
 package io.gui;
 
+import io.gui.dialog.CardDialog;
+import io.input.InteractionMode;
 import io.renderer.Renderer;
 import tree.card.Card;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
@@ -11,15 +12,15 @@ import java.util.ArrayList;
 
 public class GuiHandler {
     public static JLabel cordsLabel;
-    private static JButton moveButton, addButton, editButton, connectionButton;
+    private static JButton moveButton, addButton, editButton, connectionButton, deleteButton;
 
     private static InteractionMode mode;
 
     public static void init() {
         GuiPanel sidebar = new GuiPanel();
-        sidebar.setSize(60, Renderer.window.getHeight()/4);
+        sidebar.setSize(Renderer.window.getWidth()/30, Renderer.window.getHeight()/3);
         sidebar.setLocation(10, 10);
-        sidebar.setLayout(new GridLayout(4, 1, 0, 1));
+        sidebar.setLayout(new GridLayout(5, 1, 0, 1));
         sidebar.setBackground(Color.GRAY);
         sidebar.setVisible(true);
 
@@ -28,7 +29,7 @@ public class GuiHandler {
         cordsLabel = new JLabel("0 0");
         cordsLabel.setSize(100, 100);
         cordsLabel.setForeground(Color.BLACK);
-        cordsLabel.setLocation(Renderer.window.getWidth()/50, (int) (Renderer.window.getHeight()/1.4));
+        cordsLabel.setLocation(Renderer.window.getWidth()/51, (int) (Renderer.window.getHeight()/1.2));
 
         Renderer.window.addPanel(sidebar);
         Renderer.window.getContainer().add(cordsLabel);
@@ -83,11 +84,23 @@ public class GuiHandler {
             connectionButton.setIcon(connecticon);
         }
 
+        deleteButton = new JButton();
+        deleteButton.setFocusable(false);
+        deleteButton.setBackground(Color.WHITE);
+
+        URL deleteIconURL = GuiHandler.class.getResource("/resources/deleteicon.png");
+
+        if (deleteIconURL != null) {
+            ImageIcon delete = new ImageIcon(deleteIconURL);
+            deleteButton.setIcon(delete);
+        }
+
         ArrayList<JButton> buttons = new ArrayList<>();
         buttons.add(moveButton);
         buttons.add(addButton);
         buttons.add(editButton);
         buttons.add(connectionButton);
+        buttons.add(deleteButton);
 
 
         //CLICK ACTION LISTENERS -------------------------------------------
@@ -116,21 +129,22 @@ public class GuiHandler {
             toggleButtonVisuals(buttons, 3);
         });
 
-        //settingsButton.addActionListener(e -> {
-        //    System.out.println("Settings button pressed");
-        //    Renderer.window.createDialog("Global Settings", Renderer.window.getWidthPercent(45), Renderer.window.getHeightPercent(40f), new SettingsDialog(), null);
-        //});
+        deleteButton.addActionListener(e -> {
+            System.out.println("Delete button pressed");
+            setMode(InteractionMode.DELETE);
+            toggleButtonVisuals(buttons, 4);
+        });
 
         toolpanel.add(moveButton);
         toolpanel.add(addButton);
         toolpanel.add(editButton);
         toolpanel.add(connectionButton);
-        //toolpanel.add(settingsButton);
+        toolpanel.add(deleteButton);
         toolpanel.setBorder(BorderFactory.createLineBorder(Color.black));
     }
 
     public static void openCardEditor(Card card) {
-        Renderer.window.createDialog("Card editor: " + card.getHeader(), 300, Renderer.window.getHeightPercent(13f), new CardDialog(), card);
+        Renderer.window.createDialog("Card editor: " + card.getHeader(), 300, 200, new CardDialog(), card);
     }
 
     public static InteractionMode getMode() {

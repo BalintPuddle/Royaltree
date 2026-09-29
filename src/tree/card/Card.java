@@ -1,6 +1,6 @@
 package tree.card;
 
-import io.gui.BoxPanel;
+import io.gui.scenegui.BoxPanel;
 import io.renderer.Renderer;
 import scene.Entity;
 import tree.line.LineMode;
@@ -19,7 +19,6 @@ public class Card extends Entity {
 
     private String header;
     private Duration duration;
-    private String title;
 
     public Card(String id, Vector2i position, Team team) {
         super(position);
@@ -36,7 +35,7 @@ public class Card extends Entity {
                 team.getColor(),
                 null,
                 header,
-                "0-0 AD"
+                "0-0 " + TreeHandler.getYearFormat()
         );
         Renderer.scene.addEntity(this);
         Renderer.window.addPanel(panel);
@@ -60,7 +59,7 @@ public class Card extends Entity {
                 team.getColor(),
                 size,
                 header,
-                "0-0 AD"
+                "0-0 "  + TreeHandler.getYearFormat()
         );
         Renderer.scene.addEntity(this);
         Renderer.window.addPanel(panel);
@@ -110,6 +109,14 @@ public class Card extends Entity {
         child.parents.clear();
         TreeHandler.removeCardLine(this, child);
         Renderer.window.getContainer().repaint();
+    }
+
+    public void removeChildren() {
+        final ArrayList<Card> childrenBuffer = new ArrayList<>(children);
+        for (Card child : childrenBuffer) {
+            removeChild(child);
+        }
+        children.clear();
     }
 
     public void addParent(Card parent) {
@@ -172,14 +179,6 @@ public class Card extends Entity {
         durationcomp.setText(duration.get());
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public void setPosition(Vector2i position) {
         panel.setLocation(position.x, position.y);
     }
@@ -194,6 +193,10 @@ public class Card extends Entity {
 
     public int getHeight() {
         return panel.getHeight();
+    }
+
+    public boolean hasParents() {
+        return !parents.isEmpty();
     }
 
     public List<Card> getParents() {

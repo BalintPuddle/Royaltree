@@ -3,17 +3,24 @@ package tree.team;
 import java.awt.*;
 
 public class Team {
+    private final int id;
     private String name;
     private Color color;
 
     public Team(String name, Color color) {
+        this.id = TeamHandler.getCount();
         this.name = name;
         this.color = color;
     }
 
     public Team() {
+        this.id = TeamHandler.getCount();
         this.name = "Team " + (TeamHandler.teams.size() + 1);
         this.color = Color.BLACK;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {

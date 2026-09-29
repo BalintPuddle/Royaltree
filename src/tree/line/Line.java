@@ -1,6 +1,6 @@
 package tree.line;
 
-import io.gui.LinePanel;
+import io.gui.scenegui.LinePanel;
 import io.renderer.Renderer;
 import scene.Entity;
 import tree.card.TreeHandler;

@@ -1,7 +1,10 @@
-package io.gui;
+package io.gui.dialog;
 
+import io.gui.menu.OptionPanel;
+import io.gui.menu.TeamPanel;
 import io.renderer.Renderer;
 import io.renderer.WindowPanel;
+import tree.card.Duration;
 import tree.card.TreeHandler;
 import tree.line.LineMode;
 import tree.team.Team;
@@ -13,7 +16,7 @@ import java.awt.*;
 public class SettingsDialog implements iDialogInfo {
     private int page;
     private int teamselector;
-    private JTextField gridfield, namefield;
+    private JTextField gridfield, namefield, timesuffixfield;
     private JCheckBox showgrid;
     private JPanel colorvisual;
     private Color currentColor;
@@ -29,6 +32,10 @@ public class SettingsDialog implements iDialogInfo {
         JPanel content = new JPanel();
         content.setBackground(Color.LIGHT_GRAY);
         content.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+        if (modifiable != null) {
+            page = (int) modifiable;
+        }
 
         JButton generalbtn = new JButton("General");
         generalbtn.addActionListener(_ -> {
@@ -70,19 +77,17 @@ public class SettingsDialog implements iDialogInfo {
                 windowPanel.updateGrid(Renderer.window.getWidth(), Integer.parseInt(gridfield.getText()));
 
                 Renderer.window.setShowGrid(showgrid.isSelected());
+                TreeHandler.setYearFormat(timesuffixfield.getText());
                 break;
             case 1:
                 TreeHandler.updateAllCards();
                 break;
             case 2:
                 switch (lineModesBox.getSelectedItem().toString()) {
-                    case "HIGH CENTER":
+                    case "HIGHEST CENTER":
                         TreeHandler.setMode(LineMode.HIGH_CENTER);
                         break;
-                    case "LOW CENTER":
-                        TreeHandler.setMode(LineMode.LOW_CENTER);
-                        break;
-                    case "CENTER":
+                    case "INDIVIDUAL CENTER":
                         TreeHandler.setMode(LineMode.CENTER);
                         break;
                 }
@@ -101,8 +106,19 @@ public class SettingsDialog implements iDialogInfo {
                 options.get(0).add(new JLabel("Grid Size:"));
                 gridfield = new JTextField(String.valueOf(Renderer.window.getGridSize()), 15);
                 options.get(0).add(gridfield);
+
                 showgrid = new JCheckBox("Show grid", Renderer.window.isGridShowing());
                 options.get(1).add(showgrid);
+
+                String[] newCardTeamBehaviourList = {"Default", "Last used"};
+                JComboBox<String> newCardTeamBehaviour = new JComboBox<>(newCardTeamBehaviourList);
+                options.get(2).add(new JLabel("New card team assignment:"));
+                options.get(2).add(newCardTeamBehaviour);
+
+                options.get(3).add(new JLabel("Year format:"));
+                timesuffixfield = new JTextField(TreeHandler.getYearFormat(), 15);
+                options.get(3).add(timesuffixfield);
+
 
                 break;
             case 1:
@@ -116,14 +132,13 @@ public class SettingsDialog implements iDialogInfo {
                 OptionPanel lineoptions = new OptionPanel(8);
                 panel.add(lineoptions);
 
-                String[] lineModes = {"HIGH CENTER", "LOW CENTER", "CENTER"};
+                String[] lineModes = {"HIGHEST CENTER", "INDIVIDUAL CENTER"};
                 JLabel label = new JLabel("Line Mode:");
                 lineoptions.get(0).add(label);
                 lineModesBox = new JComboBox<>(lineModes);
                 switch (TreeHandler.getMode()) {
                     case HIGH_CENTER -> lineModesBox.setSelectedIndex(0);
-                    case LOW_CENTER -> lineModesBox.setSelectedIndex(1);
-                    case CENTER -> lineModesBox.setSelectedIndex(2);
+                    case CENTER -> lineModesBox.setSelectedIndex(1);
                 }
                 lineoptions.get(0).add(lineModesBox);
 

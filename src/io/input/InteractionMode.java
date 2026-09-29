@@ -1,8 +1,9 @@
-package io.gui;
+package io.input;
 
 public enum InteractionMode {
     MOVE,
     ADD,
     EDIT,
-    CONNECT
+    CONNECT,
+    DELETE
 }

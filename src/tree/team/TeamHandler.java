@@ -9,7 +9,7 @@ public class TeamHandler {
     public static final int LIMIT = 10;
 
     public static void init() {
-        createTeam("default", Color.BLUE);
+        createTeam("Default", Color.BLUE);
     }
 
     public static void createTeam(String name, Color color) {
@@ -32,5 +32,17 @@ public class TeamHandler {
 
     public static boolean insideLimit() {
         return teams.size() < LIMIT;
+    }
+
+    public static int getCount() {
+        return teams.size();
+    }
+
+    public static String[] getTeamNames() {
+        final String[] teamstrings = new String[getCount()];
+        for (int i = 0; i < getCount(); i++) {
+            teamstrings[i] = teams.get(i).getName();
+        }
+        return teamstrings;
     }
 }

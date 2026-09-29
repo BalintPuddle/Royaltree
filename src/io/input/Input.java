@@ -1,9 +1,8 @@
 package io.input;
 
 import io.Camera;
-import io.gui.InteractablePanel;
+import io.gui.scenegui.InteractablePanel;
 import io.gui.GuiHandler;
-import io.gui.InteractionMode;
 import io.renderer.Renderer;
 import tree.card.Card;
 import tree.card.CardSizeTypes;
@@ -114,6 +113,21 @@ public class Input implements KeyListener, MouseListener {
                     TreeHandler.connect(connectionPair[0], connectionPair[1]);
                     connectionPair[0] = null;
                     connectionPair[1] = null;
+                }
+            }
+        }
+        else if (GuiHandler.getMode() == InteractionMode.DELETE) {
+            if (e.getButton() == 1) {
+                Component component = io.renderer.Renderer.window.getComponentAt(e.getX(), e.getY());
+                if (component instanceof InteractablePanel panel) {
+                    Card card = TreeHandler.getCardByPanel(panel);
+                    card.removeChildren();
+                    if (card.hasParents()) {
+                        card.getParents().getFirst().removeChild(card);
+                    }
+                    Renderer.window.removePanel(panel);
+                    Renderer.window.getContainer().repaint();
+                    TreeHandler.removeCard(card);
                 }
             }
         }

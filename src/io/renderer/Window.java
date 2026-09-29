@@ -1,12 +1,10 @@
 package io.renderer;
 
 import io.gui.GuiHandler;
-import io.gui.SettingsDialog;
+import io.gui.dialog.SettingsDialog;
 import io.input.Input;
-import io.gui.InteractablePanel;
-import io.gui.iDialogInfo;
+import io.gui.dialog.iDialogInfo;
 import scene.Scene;
-import tree.card.CardSizeTypes;
 import utils.Vector2i;
 
 import javax.swing.*;
@@ -16,7 +14,7 @@ public class Window {
     private JFrame frame;
     private Container container;
 
-    private final String VERSION = "0.2";
+    private final String VERSION = "0.2.1";
     private final String TITLE = "Royaltree Beta " + VERSION;
     private final int WIDTH = 2000;
     private final int HEIGHT = 1000;
@@ -83,9 +81,14 @@ public class Window {
             JMenuItem settings = new JMenuItem("Settings");
 
             settings.addActionListener(_ ->
-                    Renderer.window.createDialog("Global Settings", Renderer.window.getWidthPercent(45), Renderer.window.getHeightPercent(40f), new SettingsDialog(), null));
+                    Renderer.window.createDialog("Project Settings", Renderer.window.getWidthPercent(45), Renderer.window.getHeightPercent(40f), new SettingsDialog(), null));
+
+            JMenuItem teams = new JMenuItem("Teams");
+            teams.addActionListener(_ ->
+                    Renderer.window.createDialog("Project Settings", Renderer.window.getWidthPercent(45), Renderer.window.getHeightPercent(40f), new SettingsDialog(), 1));
 
             editmenu.add(settings);
+            editmenu.add(teams);
 
         //====================================================
         //Adding all the menus  to the bar

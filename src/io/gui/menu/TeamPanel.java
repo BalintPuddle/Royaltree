@@ -1,10 +1,8 @@
-package io.gui;
+package io.gui.menu;
 
 import tree.team.Team;
-import utils.Vector4i;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class TeamPanel extends JPanel {
     private final Team team;

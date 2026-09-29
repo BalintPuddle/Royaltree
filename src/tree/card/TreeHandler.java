@@ -19,6 +19,11 @@ public class TreeHandler {
     private static List<Card> cards = new ArrayList<>();
     private static List<Line> lines = new ArrayList<>();
     private static LineMode mode = LineMode.HIGH_CENTER;
+    private static String yearFormat;
+
+    public static void init() {
+        yearFormat = "AD";
+    }
 
     public static void addCard(String id, Vector2i gridPosition, Team team) {
         Card card = new Card(id, Renderer.window.GridToPosition(gridPosition), team);
@@ -36,6 +41,10 @@ public class TreeHandler {
         cards.add(card);
         Renderer.window.refresh();
         return card;
+    }
+
+    public static void removeCard(Card card) {
+        cards.remove(card);
     }
 
     public static List<Card> getCards() {
@@ -181,11 +190,16 @@ public class TreeHandler {
     }
 
     public static void connect(Card from, Card to) {
-        if (from.isParentOf(to)) {
-            disconnect(from, to);
+        if (from != null && to != null) {
+            if (from.isParentOf(to)) {
+                disconnect(from, to);
+            }
+            else {
+                from.addChild(to);
+            }
         }
         else {
-            from.addChild(to);
+            System.out.println("ERROR: Failed to connect cards from " + (from==null ? "NULL" : from.getId()) + " to " + (to==null ? "NULL" : to.getId()));
         }
     }
 
@@ -214,5 +228,13 @@ public class TreeHandler {
 
     public static void setMode(LineMode mode) {
         TreeHandler.mode = mode;
+    }
+
+    public static String getYearFormat() {
+        return yearFormat;
+    }
+
+    public static void setYearFormat(String yearFormat) {
+        TreeHandler.yearFormat = yearFormat;
     }
 }

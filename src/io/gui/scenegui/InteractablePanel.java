@@ -1,4 +1,4 @@
-package io.gui;
+package io.gui.scenegui;
 
 import javax.swing.*;
 
