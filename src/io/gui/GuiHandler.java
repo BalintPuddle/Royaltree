@@ -7,23 +7,28 @@ import tree.card.Card;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.net.URL;
 import java.util.ArrayList;
 
 public class GuiHandler {
     public static JLabel cordsLabel;
+    private static ArrayList<JButton> buttons;
+    private static GuiPanel sidebar;
     private static JButton moveButton, addButton, editButton, connectionButton, deleteButton;
 
     private static InteractionMode mode;
 
     public static void init() {
-        GuiPanel sidebar = new GuiPanel();
-        sidebar.setSize(Renderer.window.getWidth()/30, Renderer.window.getHeight()/3);
+        sidebar = new GuiPanel();
+        sidebar.setSize(Renderer.window.getHeight()/15, Renderer.window.getHeight()/3);
         sidebar.setLocation(10, 10);
         sidebar.setLayout(new GridLayout(5, 1, 0, 1));
         sidebar.setBackground(Color.GRAY);
         sidebar.setVisible(true);
 
+        buttons = new ArrayList<>();
         addButtons(sidebar);
 
         cordsLabel = new JLabel("0 0");
@@ -38,101 +43,49 @@ public class GuiHandler {
         mode = InteractionMode.MOVE;
     }
 
+    public static void onWindowResize(int newWidth, int newHeight) {
+        sidebar.setSize(newHeight/15, newHeight/3);
+    }
+
     private static void addButtons(GuiPanel toolpanel) {
-        moveButton = new JButton();
-        moveButton.setFocusable(false);
-        moveButton.setEnabled(false);
-        moveButton.setBackground(Color.WHITE);
+        moveButton = createButton("/resources/moveicon.png");
+        addButton = createButton("/resources/addicon.png");
+        editButton = createButton("/resources/editicon.png");
+        connectionButton = createButton("/resources/connecticon.png");
+        deleteButton = createButton("/resources/deleteicon.png");
 
-        URL moveIconURL = GuiHandler.class.getResource("/resources/moveicon.png");
-
-        if (moveIconURL != null) {
-            ImageIcon moveicon = new ImageIcon(moveIconURL);
-            moveButton.setIcon(moveicon);
-        }
-
-        addButton = new JButton();
-        addButton.setFocusable(false);
-        addButton.setBackground(Color.WHITE);
-
-        URL addIconURL = GuiHandler.class.getResource("/resources/addicon.png");
-
-        if (addIconURL != null) {
-            ImageIcon addicon = new ImageIcon(addIconURL);
-            addButton.setIcon(addicon);
-        }
-
-        editButton = new JButton();
-        editButton.setFocusable(false);
-        editButton.setBackground(Color.WHITE);
-
-        URL editIconURL = GuiHandler.class.getResource("/resources/editicon.png");
-
-        if (editIconURL != null) {
-            ImageIcon editicon = new ImageIcon(editIconURL);
-            editButton.setIcon(editicon);
-        }
-
-        connectionButton = new JButton();
-        connectionButton.setFocusable(false);
-        connectionButton.setBackground(Color.WHITE);
-
-        URL connectIconURL = GuiHandler.class.getResource("/resources/connecticon.png");
-
-        if (connectIconURL != null) {
-            ImageIcon connecticon = new ImageIcon(connectIconURL);
-            connectionButton.setIcon(connecticon);
-        }
-
-        deleteButton = new JButton();
-        deleteButton.setFocusable(false);
-        deleteButton.setBackground(Color.WHITE);
-
-        URL deleteIconURL = GuiHandler.class.getResource("/resources/deleteicon.png");
-
-        if (deleteIconURL != null) {
-            ImageIcon delete = new ImageIcon(deleteIconURL);
-            deleteButton.setIcon(delete);
-        }
-
-        ArrayList<JButton> buttons = new ArrayList<>();
-        buttons.add(moveButton);
-        buttons.add(addButton);
-        buttons.add(editButton);
-        buttons.add(connectionButton);
-        buttons.add(deleteButton);
-
+        toggleButtonVisuals(0);
 
         //CLICK ACTION LISTENERS -------------------------------------------
 
-        moveButton.addActionListener(e -> {
+        moveButton.addActionListener(_ -> {
             System.out.println("Move button pressed");
             setMode(InteractionMode.MOVE);
-            toggleButtonVisuals(buttons, 0);
+            toggleButtonVisuals(0);
         });
 
-        addButton.addActionListener(e -> {
+        addButton.addActionListener(_ -> {
             System.out.println("Add button pressed");
             setMode(InteractionMode.ADD);
-            toggleButtonVisuals(buttons, 1);
+            toggleButtonVisuals(1);
         });
 
-        editButton.addActionListener(e -> {
+        editButton.addActionListener(_ -> {
             System.out.println("Edit button pressed");
             setMode(InteractionMode.EDIT);
-            toggleButtonVisuals(buttons, 2);
+            toggleButtonVisuals(2);
         });
 
-        connectionButton.addActionListener(e -> {
+        connectionButton.addActionListener(_ -> {
             System.out.println("Connection button pressed");
             setMode(InteractionMode.CONNECT);
-            toggleButtonVisuals(buttons, 3);
+            toggleButtonVisuals(3);
         });
 
-        deleteButton.addActionListener(e -> {
+        deleteButton.addActionListener(_ -> {
             System.out.println("Delete button pressed");
             setMode(InteractionMode.DELETE);
-            toggleButtonVisuals(buttons, 4);
+            toggleButtonVisuals(4);
         });
 
         toolpanel.add(moveButton);
@@ -141,6 +94,33 @@ public class GuiHandler {
         toolpanel.add(connectionButton);
         toolpanel.add(deleteButton);
         toolpanel.setBorder(BorderFactory.createLineBorder(Color.black));
+    }
+
+    private static JButton createButton(String iconpath) {
+        JButton button = new JButton();
+        button.setFocusable(false);
+        button.setEnabled(false);
+        button.setBackground(Color.WHITE);
+
+        URL buttonIconURL = GuiHandler.class.getResource(iconpath);
+
+        if (buttonIconURL != null) {
+            ImageIcon moveicon = new ImageIcon(buttonIconURL);
+            Image scaled = moveicon.getImage().getScaledInstance(Renderer.window.getHeight()/20, Renderer.window.getHeight()/20, Image.SCALE_SMOOTH);
+            button.setIcon(new ImageIcon(scaled));
+        }
+        buttons.add(button);
+
+        button.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                ImageIcon moveicon = new ImageIcon(buttonIconURL);
+                Image scaled = moveicon.getImage().getScaledInstance(Renderer.window.getHeight()/20, Renderer.window.getHeight()/20, Image.SCALE_SMOOTH);
+                button.setIcon(new ImageIcon(scaled));
+            }
+        });
+
+        return button;
     }
 
     public static void openCardEditor(Card card) {
@@ -155,7 +135,7 @@ public class GuiHandler {
         GuiHandler.mode = mode;
     }
 
-    public static void toggleButtonVisuals(ArrayList<JButton> buttons, int index) {
+    public static void toggleButtonVisuals(int index) {
         for (JButton button : buttons) {
             if (button == buttons.get(index)) {
                 button.setEnabled(false);

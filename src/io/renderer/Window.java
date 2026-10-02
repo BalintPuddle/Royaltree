@@ -9,17 +9,17 @@ import utils.Vector2i;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 public class Window {
     private JFrame frame;
     private Container container;
 
-    private final String VERSION = "0.2.1";
+    private final String VERSION = "0.3.0";
     private final String TITLE = "Royaltree Beta " + VERSION;
-    private final int WIDTH = 2000;
-    private final int HEIGHT = 1000;
 
-    private int GRID_SIZE = 20;
+    private int grid_size = 50;
     private boolean showGrid;
 
     public Window() {
@@ -29,10 +29,10 @@ public class Window {
     public void createWindow() {
         frame = new JFrame();
         frame.setTitle(TITLE);
-        frame.setSize(WIDTH, HEIGHT);
+        frame.setSize(2560, 1440);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(null);
-        frame.setResizable(false);
+        frame.setResizable(true);
         frame.setFocusable(true);
 
         Input input = new Input();
@@ -42,9 +42,25 @@ public class Window {
         frame.setVisible(true);
 
         showGrid = true;
-        frame.setContentPane(new WindowPanel(GRID_SIZE, WIDTH));
+        frame.setContentPane(new WindowPanel(grid_size, getWidth()));
         container = frame.getContentPane();
         frame.requestFocus();
+
+        frame.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                GuiHandler.onWindowResize(frame.getWidth(), frame.getHeight());
+            }
+        });
+
+        frame.addWindowStateListener(e -> {
+            if ((e.getNewState() & Frame.MAXIMIZED_BOTH) != 0) {
+                GuiHandler.onWindowResize(frame.getWidth(), frame.getHeight());
+            }
+            else {
+                GuiHandler.onWindowResize(frame.getWidth(), frame.getHeight());
+            }
+        });
     }
 
     private JMenuBar createMenubar() {
@@ -81,14 +97,21 @@ public class Window {
             JMenuItem settings = new JMenuItem("Settings");
 
             settings.addActionListener(_ ->
-                    Renderer.window.createDialog("Project Settings", Renderer.window.getWidthPercent(45), Renderer.window.getHeightPercent(40f), new SettingsDialog(), null));
+                    Renderer.window.createDialog("Project Settings", 900, 400, new SettingsDialog(), null));
 
             JMenuItem teams = new JMenuItem("Teams");
             teams.addActionListener(_ ->
-                    Renderer.window.createDialog("Project Settings", Renderer.window.getWidthPercent(45), Renderer.window.getHeightPercent(40f), new SettingsDialog(), 1));
+                    Renderer.window.createDialog("Project Settings", 900, 400, new SettingsDialog(), 1));
 
             editmenu.add(settings);
             editmenu.add(teams);
+
+        // [ABOUT] --> MENU ITEMS
+            JMenuItem project  = new JMenuItem("Project");
+            JMenuItem credits = new JMenuItem("Credits");
+
+            aboutmenu.add(project);
+            aboutmenu.add(credits);
 
         //====================================================
         //Adding all the menus  to the bar
@@ -143,25 +166,25 @@ public class Window {
 
     public Vector2i PositionToGrid (Vector2i position) {
         Vector2i vector = new Vector2i(
-                position.x / (WIDTH / GRID_SIZE),
-                position.y / (WIDTH / GRID_SIZE)
+                position.x / grid_size,
+                position.y / grid_size
         );
-        System.out.println(vector.x + " " + vector.y);
         return vector;
     }
 
     public Vector2i GridToPosition (Vector2i gridPosition) {
         Vector2i vector = new Vector2i(
-                gridPosition.x * (WIDTH / GRID_SIZE),
-                gridPosition.y * (WIDTH / GRID_SIZE)
+                gridPosition.x * grid_size,
+                gridPosition.y * grid_size
         );
         return vector;
     }
 
     public Vector2i PositionToGridPosition(Vector2i position) {
+        //IMPORTANT TO DIVIDE IT AND MULTIPLE IT AS INTEGER DIVISION FLOORS THE VALUE
         return Renderer.scene.worldToScreenSpace(
-                position.x / (WIDTH / GRID_SIZE) * (WIDTH / GRID_SIZE),
-                position.y / (WIDTH / GRID_SIZE) * (WIDTH / GRID_SIZE)
+                position.x / grid_size * grid_size,
+                position.y / grid_size * grid_size
         );
     }
 
@@ -172,6 +195,7 @@ public class Window {
     public void refresh() {
         frame.setVisible(true);
         frame.getContentPane().setVisible(true);
+        frame.repaint();
     }
 
     public void addPanel(JPanel panel) {
@@ -187,15 +211,15 @@ public class Window {
     }
 
     public int getWidth() {
-        return WIDTH;
+        return frame.getWidth();
     }
 
     public int getHeight() {
-        return HEIGHT;
+        return frame.getHeight();
     }
 
     public int getGridSize() {
-        return GRID_SIZE;
+        return grid_size;
     }
 
     public Container getContainer() {
@@ -203,15 +227,15 @@ public class Window {
     }
 
     public int getWidthPercent(float percent) {
-        return (int) (WIDTH * (percent/100));
+        return (int) (getWidth() * (percent/100));
     }
 
     public int getHeightPercent(float percent) {
-        return (int) (HEIGHT * (percent/100));
+        return (int) (getHeight() * (percent/100));
     }
 
     public void setGridSize(int size) {
-        this.GRID_SIZE = size;
+        this.grid_size = size;
     }
 
     public boolean isGridShowing() {
@@ -224,5 +248,9 @@ public class Window {
 
     public Point getWindowScrenLocation() {
         return frame.getLocationOnScreen();
+    }
+
+    public JFrame getFrame() {
+        return frame;
     }
 }
