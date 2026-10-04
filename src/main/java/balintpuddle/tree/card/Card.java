@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Card extends Entity {
-    private final String id;
+    private final int id;
     private List<Card> parents;
     private List<Card> children;
     private Team team;
@@ -20,9 +20,9 @@ public class Card extends Entity {
     private String header;
     private Duration duration;
 
-    public Card(String id, Vector2i position, Team team) {
+    public Card(Vector2i position, Team team) {
         super(position);
-        this.id = id;
+        this.id = TreeHandler.getCount();
         this.team = team;
         this.header = "New Card";
         this.duration = new Duration(0, 0);
@@ -44,9 +44,9 @@ public class Card extends Entity {
         System.out.println("Created new card at " + panel.getX() + "," + panel.getY());
     }
 
-    public Card(String id, Vector2i position, Team team, Vector2i size) {
+    public Card(Vector2i position, Team team, Vector2i size) {
         super(position);
-        this.id = id;
+        this.id = TreeHandler.getCount();
         this.team = team;
         this.parents = new ArrayList<>();
         this.children = new ArrayList<>();
@@ -85,7 +85,7 @@ public class Card extends Entity {
         panel.setBackground(team.getColor());
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 

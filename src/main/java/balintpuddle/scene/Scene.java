@@ -1,5 +1,6 @@
 package balintpuddle.scene;
 
+import balintpuddle.io.gui.GuiHandler;
 import balintpuddle.io.renderer.Window;
 import balintpuddle.io.Camera;
 import balintpuddle.io.renderer.Renderer;
@@ -15,6 +16,9 @@ public class Scene {
     public Scene(Window window) {
         this.window = window;
         entities = new ArrayList<>();
+        Renderer.window.getContainer().removeAll();
+        Renderer.window.refresh();
+        GuiHandler.init();
     }
 
     public void addEntity(Entity entity) {

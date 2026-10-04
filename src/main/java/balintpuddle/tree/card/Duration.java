@@ -4,6 +4,7 @@ public class Duration {
     public int from;
     public int to;
 
+    public Duration() {}
 
     public Duration(int from, int to) {
         this.from = from;

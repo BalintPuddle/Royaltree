@@ -26,6 +26,15 @@ public class TeamHandler {
         return null;
     }
 
+    public static Team get(int id) {
+        for (Team team : teams) {
+            if (team.getId() == id) {
+                return team;
+            }
+        }
+        return null;
+    }
+
     public static Team getdefault() {
         return teams.getFirst();
     }

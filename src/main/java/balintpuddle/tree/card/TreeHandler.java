@@ -26,18 +26,18 @@ public class TreeHandler {
     }
 
     public static void addCard(String id, Vector2i gridPosition, Team team) {
-        Card card = new Card(id, Renderer.window.GridToPosition(gridPosition), team);
+        Card card = new Card(Renderer.window.GridToPosition(gridPosition), team);
         cards.add(card);
     }
 
-    public static void addCard(String id, Vector2i gridPosition, Team team, Vector2i size) {
-        Card card = new Card(id, Renderer.window.GridToPosition(gridPosition), team, size);
+    public static void addCard(Vector2i gridPosition, Team team, Vector2i size) {
+        Card card = new Card(Renderer.window.GridToPosition(gridPosition), team, size);
         cards.add(card);
         Renderer.window.refresh();
     }
 
-    public static Card createCard(String id, Vector2i gridPosition, Team team, Vector2i size) { //Same as add card but this one returns the card
-        Card card = new Card(id, Renderer.window.GridToPosition(gridPosition), team, size);
+    public static Card createCard(Vector2i gridPosition, Team team, Vector2i size) { //Same as add card but this one returns the card
+        Card card = new Card(Renderer.window.GridToPosition(gridPosition), team, size);
         cards.add(card);
         Renderer.window.refresh();
         return card;
@@ -51,9 +51,9 @@ public class TreeHandler {
         return cards;
     }
 
-    public static Card getCard(String id) {
+    public static Card getCard(int id) {
         for (Card card : cards) {
-            if (Objects.equals(card.getId(), id)) {
+            if (card.getId() == id) {
                 return card;
             }
         }
@@ -73,6 +73,10 @@ public class TreeHandler {
         for (Card card : cards) {
             card.update();
         }
+    }
+
+    public static int getCount() {
+        return cards.size();
     }
 
     //LINES SECTION ----------------------------------------------------------------------------------

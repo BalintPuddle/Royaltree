@@ -1,6 +1,7 @@
 package main.java.balintpuddle;
 
 
+import balintpuddle.io.file.ProjectSerializer;
 import balintpuddle.io.gui.GuiHandler;
 import balintpuddle.io.renderer.Renderer;
 import balintpuddle.time.Tick;
@@ -17,7 +18,7 @@ public class Main {
         Renderer.render();
         TeamHandler.init();
         TreeHandler.init();
-        GuiHandler.init();
+        ProjectSerializer.init();
         Tick.start();
     }
 }

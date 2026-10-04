@@ -151,7 +151,6 @@ public class Input implements KeyListener, MouseListener {
 
     private static void createCardAtPoint(Point point) {
         TreeHandler.addCard(
-                "card_" + (TreeHandler.getCards().size() - 1),
                 Renderer.window.PositionToGrid(new Vector2i(
                         point.x - Renderer.window.getWindowScrenLocation().x,
                         point.y - Renderer.window.getWindowScrenLocation().y)),

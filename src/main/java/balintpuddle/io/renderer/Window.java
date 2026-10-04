@@ -1,5 +1,7 @@
 package balintpuddle.io.renderer;
 
+import balintpuddle.io.file.ProjectHandler;
+import balintpuddle.io.file.ProjectSerializer;
 import balintpuddle.io.gui.GuiHandler;
 import balintpuddle.io.gui.dialog.SettingsDialog;
 import balintpuddle.io.gui.dialog.iDialogInfo;
@@ -11,6 +13,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.io.IOException;
+import java.nio.file.Path;
 
 public class Window {
     private JFrame frame;
@@ -80,11 +84,16 @@ public class Window {
 
             newproject.addActionListener(_ -> {
                 Renderer.scene = new Scene(this);
-                getContainer().removeAll();
-                getContainer().revalidate();
-                getContainer().repaint();
-                GuiHandler.init();
             });
+
+            save.addActionListener(_ -> {
+                ProjectHandler.save();
+            });
+
+            open.addActionListener(_ -> {
+                ProjectHandler.load();
+            });
+
             exit.addActionListener(_ -> System.exit(0));
 
             filemenu.add(newproject);
