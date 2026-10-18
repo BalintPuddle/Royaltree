@@ -54,4 +54,12 @@ public class TeamHandler {
         }
         return teamstrings;
     }
+
+    public static void clear() {
+        teams.clear();
+    }
+
+    public static List<Team> getTeams() {
+        return teams;
+    }
 }

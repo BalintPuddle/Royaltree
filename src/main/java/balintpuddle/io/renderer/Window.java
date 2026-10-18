@@ -1,7 +1,7 @@
 package balintpuddle.io.renderer;
 
+import balintpuddle.global.ImmutableFlags;
 import balintpuddle.io.file.ProjectHandler;
-import balintpuddle.io.file.ProjectSerializer;
 import balintpuddle.io.gui.GuiHandler;
 import balintpuddle.io.gui.dialog.SettingsDialog;
 import balintpuddle.io.gui.dialog.iDialogInfo;
@@ -13,15 +13,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.io.IOException;
-import java.nio.file.Path;
 
 public class Window {
     private JFrame frame;
     private Container container;
-
-    private final String VERSION = "0.3.0";
-    private final String TITLE = "Royaltree Beta " + VERSION;
 
     private int grid_size = 50;
     private boolean showGrid;
@@ -32,7 +27,7 @@ public class Window {
 
     public void createWindow() {
         frame = new JFrame();
-        frame.setTitle(TITLE);
+        frame.setTitle(ImmutableFlags.TITLE);
         frame.setSize(2560, 1440);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(null);
@@ -78,8 +73,9 @@ public class Window {
         // [FILE] --> MENU ITEMS
 
             JMenuItem newproject = new JMenuItem("New Project");
-            JMenuItem open = new JMenuItem("Open Project");
-            JMenuItem save = new JMenuItem("Save Project");
+            JMenuItem open = new JMenuItem("Open..");
+            JMenuItem save = new JMenuItem("Save");
+            JMenuItem saveas = new JMenuItem("Save As..");
             JMenuItem exit = new JMenuItem("Exit");
 
             newproject.addActionListener(_ -> {
@@ -88,6 +84,10 @@ public class Window {
 
             save.addActionListener(_ -> {
                 ProjectHandler.save();
+            });
+
+            saveas.addActionListener(_ -> {
+                ProjectHandler.saveAs();
             });
 
             open.addActionListener(_ -> {
@@ -99,6 +99,7 @@ public class Window {
             filemenu.add(newproject);
             filemenu.add(open);
             filemenu.add(save);
+            filemenu.add(saveas);
             filemenu.add(exit);
 
         // [EDIT] --> MENU ITEMS
@@ -116,7 +117,7 @@ public class Window {
             editmenu.add(teams);
 
         // [ABOUT] --> MENU ITEMS
-            JMenuItem project  = new JMenuItem("Project");
+            JMenuItem project  = new JMenuItem("Royaltree");
             JMenuItem credits = new JMenuItem("Credits");
 
             aboutmenu.add(project);
@@ -216,7 +217,7 @@ public class Window {
     }
 
     public String getTitle() {
-        return TITLE;
+        return frame.getTitle();
     }
 
     public int getWidth() {

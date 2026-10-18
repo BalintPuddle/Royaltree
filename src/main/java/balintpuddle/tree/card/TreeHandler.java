@@ -13,16 +13,17 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class TreeHandler {
     private static List<Card> cards = new ArrayList<>();
     private static List<Line> lines = new ArrayList<>();
     private static LineMode mode = LineMode.HIGH_CENTER;
     private static String yearFormat;
+    private static CardTeamAssignments teamMode;
 
     public static void init() {
         yearFormat = "AD";
+        teamMode = CardTeamAssignments.DEFAULT;
     }
 
     public static void addCard(String id, Vector2i gridPosition, Team team) {
@@ -38,6 +39,13 @@ public class TreeHandler {
 
     public static Card createCard(Vector2i gridPosition, Team team, Vector2i size) { //Same as add card but this one returns the card
         Card card = new Card(Renderer.window.GridToPosition(gridPosition), team, size);
+        cards.add(card);
+        Renderer.window.refresh();
+        return card;
+    }
+
+    public static Card createCardAtExact(Vector2i position, Team team, Vector2i size) { //Same as add card but this one returns the card
+        Card card = new Card(position, team, size);
         cards.add(card);
         Renderer.window.refresh();
         return card;
@@ -240,5 +248,17 @@ public class TreeHandler {
 
     public static void setYearFormat(String yearFormat) {
         TreeHandler.yearFormat = yearFormat;
+    }
+
+    public static void clear() {
+        cards.clear();
+    }
+
+    public static CardTeamAssignments getTeamMode() {
+        return teamMode;
+    }
+
+    public static void setTeamMode(CardTeamAssignments teamMode) {
+        TreeHandler.teamMode = teamMode;
     }
 }

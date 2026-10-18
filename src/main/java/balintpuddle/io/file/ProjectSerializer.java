@@ -1,6 +1,8 @@
 package balintpuddle.io.file;
 
 import balintpuddle.tree.card.TreeHandler;
+import balintpuddle.tree.team.TeamHandler;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -19,9 +21,11 @@ public class ProjectSerializer {
 
     public static void init() {
         mapper = new ObjectMapper();
+        mapper.disable(JsonGenerator.Feature.AUTO_CLOSE_TARGET); //Stops jackson from closing the zip stream too early and always throwing a stream closed exception
     }
+
     public static void save(Path file) throws IOException {
-        Project project = new Project(version, TreeHandler.getCards());
+        Project project = new Project(version, TreeHandler.getCards(), TeamHandler.getTeams());
         try (OutputStream outputStream = Files.newOutputStream(file)) {
             ZipOutputStream zip = new ZipOutputStream(outputStream);
 

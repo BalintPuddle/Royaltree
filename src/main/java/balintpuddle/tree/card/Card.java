@@ -98,6 +98,7 @@ public class Card extends Entity {
     }
 
     public void addChild(Card child) {
+        System.out.println(getChildren());
         children.add(child);
         child.addParent(this);
         TreeHandler.drawCardLine(this, child);

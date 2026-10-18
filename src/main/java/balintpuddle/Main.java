@@ -1,4 +1,4 @@
-package main.java.balintpuddle;
+package balintpuddle;
 
 
 import balintpuddle.io.file.ProjectSerializer;

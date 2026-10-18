@@ -1,5 +1,7 @@
 package balintpuddle.io.gui.dialog;
 
+import balintpuddle.global.ImmutableFlags;
+import balintpuddle.global.MutableFlags;
 import balintpuddle.tree.card.Card;
 import balintpuddle.tree.card.Duration;
 import balintpuddle.tree.team.TeamHandler;
@@ -46,7 +48,6 @@ public class CardDialog implements iDialogInfo {
         panel.add(panel4);
         panel.add(new JLabel("Reign:"));
         panel.add(panel2);
-        panel.add(panel3);
     }
 
     @Override
@@ -60,6 +61,8 @@ public class CardDialog implements iDialogInfo {
             card.setDuration(new Duration(Integer.parseInt(start), Integer.parseInt(end)));
             card.setTeam(TeamHandler.get((String) teamcombo.getSelectedItem()));
             card.update();
+
+            MutableFlags.lastUsedTeam = card.getTeam();
         }
     }
 }
