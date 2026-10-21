@@ -35,7 +35,9 @@ public class GuiHandler {
         cordsLabel = new JLabel("0 0");
         cordsLabel.setSize(100, 100);
         cordsLabel.setForeground(Color.BLACK);
-        cordsLabel.setLocation(Renderer.window.getWidth()/51, (int) (Renderer.window.getHeight()/1.2));
+        cordsLabel.setLocation(Renderer.window.getWidth()/51, (int) (Renderer.window.getHeight() * 0.90));
+        cordsLabel.setFont(new Font("Arial", Font.BOLD, Renderer.window.getHeight()/50));
+        cordsLabel.setSize(Renderer.window.getWidth()/15, Renderer.window.getHeight()/15);
 
         Renderer.window.addPanel(sidebar);
         Renderer.window.getContainer().add(cordsLabel);
@@ -46,6 +48,10 @@ public class GuiHandler {
 
     public static void onWindowResize(int newWidth, int newHeight) {
         sidebar.setSize(newHeight/15, newHeight/3);
+        cordsLabel.setLocation(newHeight/51, (int) (newHeight * 0.90));
+        cordsLabel.setFont(new Font("Arial", Font.BOLD, newHeight/50));
+        cordsLabel.setSize(newWidth/15, newHeight/15);
+        System.out.println(newHeight);
     }
 
     private static void addButtons(GuiPanel toolpanel) {

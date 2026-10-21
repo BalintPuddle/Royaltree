@@ -48,6 +48,7 @@ public class CardDialog implements iDialogInfo {
         panel.add(panel4);
         panel.add(new JLabel("Reign:"));
         panel.add(panel2);
+        panel.add(panel3);
     }
 
     @Override

@@ -59,7 +59,16 @@ public class TeamHandler {
         teams.clear();
     }
 
+    public static void reset() {
+        teams.clear();
+        init();
+    }
+
     public static List<Team> getTeams() {
         return teams;
+    }
+
+    public static void remove(int index) {
+        teams.remove(index);
     }
 }

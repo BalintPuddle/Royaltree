@@ -1,6 +1,7 @@
 package balintpuddle.io.input;
 
 import balintpuddle.io.Camera;
+import balintpuddle.io.gui.dialog.SettingsDialog;
 import balintpuddle.io.gui.scenegui.InteractablePanel;
 import balintpuddle.io.gui.GuiHandler;
 import balintpuddle.io.renderer.Renderer;
@@ -55,6 +56,9 @@ public class Input implements KeyListener, MouseListener {
         }
         if (e.getKeyChar() == 'c') {
             Renderer.scene.transformAll(-Camera.x, -Camera.y);
+        }
+        if (e.getKeyChar() == 't') {
+            Renderer.window.createDialog("Project Settings", 900, 400, new SettingsDialog(), 1);
         }
     }
 

@@ -41,23 +41,23 @@ public class Window {
         frame.setVisible(true);
 
         showGrid = true;
-        frame.setContentPane(new WindowPanel(grid_size, getWidth()));
+        frame.setContentPane(new WindowPanel(grid_size, frame.getWidth()));
         container = frame.getContentPane();
         frame.requestFocus();
 
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                GuiHandler.onWindowResize(frame.getWidth(), frame.getHeight());
+                GuiHandler.onWindowResize(container.getWidth(), container.getHeight());
             }
         });
 
         frame.addWindowStateListener(e -> {
             if ((e.getNewState() & Frame.MAXIMIZED_BOTH) != 0) {
-                GuiHandler.onWindowResize(frame.getWidth(), frame.getHeight());
+                GuiHandler.onWindowResize(container.getWidth(), container.getHeight());
             }
             else {
-                GuiHandler.onWindowResize(frame.getWidth(), frame.getHeight());
+                GuiHandler.onWindowResize(container.getWidth(), container.getHeight());
             }
         });
     }
@@ -221,11 +221,11 @@ public class Window {
     }
 
     public int getWidth() {
-        return frame.getWidth();
+        return container.getWidth();
     }
 
     public int getHeight() {
-        return frame.getHeight();
+        return container.getHeight();
     }
 
     public int getGridSize() {
