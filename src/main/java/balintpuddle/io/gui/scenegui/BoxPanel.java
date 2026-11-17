@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class BoxPanel extends InteractablePanel {
+    private boolean highlighted = false;
+
     public BoxPanel(int x, int y, Color color, Vector2i size, String label0, String label1) {
         super();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -41,4 +43,18 @@ public class BoxPanel extends InteractablePanel {
         add(Box.createRigidArea(new Dimension(0, getHeight()/4)));
     }
 
+    public boolean isHighlighted() {
+        return highlighted;
+    }
+
+    public void setHighlighted(boolean highlighted) {
+        if (highlighted) {
+            this.highlighted = true;
+            setBorder(BorderFactory.createLineBorder(Color.GRAY, 5));
+        }
+        else {
+            this.highlighted = false;
+            setBorder(null);
+        }
+    }
 }

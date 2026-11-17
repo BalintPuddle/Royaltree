@@ -1,5 +1,6 @@
 package balintpuddle.io.input;
 
+import balintpuddle.global.MutableFlags;
 import balintpuddle.io.Camera;
 import balintpuddle.io.gui.dialog.SettingsDialog;
 import balintpuddle.io.gui.scenegui.InteractablePanel;
@@ -7,9 +8,11 @@ import balintpuddle.io.gui.GuiHandler;
 import balintpuddle.io.renderer.Renderer;
 import balintpuddle.tree.card.Card;
 import balintpuddle.tree.card.CardSizeTypes;
+import balintpuddle.tree.card.CardTeamAssignments;
 import balintpuddle.tree.card.TreeHandler;
 import balintpuddle.tree.team.TeamHandler;
 import balintpuddle.utils.Vector2i;
+import com.sun.source.tree.Tree;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,24 +44,44 @@ public class Input implements KeyListener, MouseListener {
         if (e.getKeyChar() == 'w') {
             Renderer.scene.transformAll(0, -MOVE_SPEED);
         }
-        if (e.getKeyChar() == 's') {
+        else if (e.getKeyChar() == 's') {
             Renderer.scene.transformAll(0, MOVE_SPEED);
         }
-        if (e.getKeyChar() == 'a') {
+        else if (e.getKeyChar() == 'a') {
             Renderer.scene.transformAll(-MOVE_SPEED, 0);
         }
-        if (e.getKeyChar() == 'd') {
+        else if (e.getKeyChar() == 'd') {
             Renderer.scene.transformAll(MOVE_SPEED, 0);
         }
 
-        if (e.getKeyChar() == 'e') {
+        else if (e.getKeyChar() == 'e') {
             createCardAtPoint(MouseInfo.getPointerInfo().getLocation());
         }
-        if (e.getKeyChar() == 'c') {
+        else if (e.getKeyChar() == 'c') {
             Renderer.scene.transformAll(-Camera.x, -Camera.y);
         }
-        if (e.getKeyChar() == 't') {
+        else if (e.getKeyChar() == 't') {
             Renderer.window.createDialog("Project Settings", 900, 400, new SettingsDialog(), 1);
+        }
+        else if (e.getKeyChar() == '1') {
+            GuiHandler.setMode(InteractionMode.MOVE);
+            GuiHandler.toggleButtonVisuals(0);
+        }
+        else if (e.getKeyChar() == '2') {
+            GuiHandler.setMode(InteractionMode.ADD);
+            GuiHandler.toggleButtonVisuals(1);
+        }
+        else if (e.getKeyChar() == '3') {
+            GuiHandler.setMode(InteractionMode.EDIT);
+            GuiHandler.toggleButtonVisuals(2);
+        }
+        else if (e.getKeyChar() == '4') {
+            GuiHandler.setMode(InteractionMode.CONNECT);
+            GuiHandler.toggleButtonVisuals(3);
+        }
+        else if (e.getKeyChar() == '5') {
+            GuiHandler.setMode(InteractionMode.DELETE);
+            GuiHandler.toggleButtonVisuals(4);
         }
     }
 
@@ -156,9 +179,9 @@ public class Input implements KeyListener, MouseListener {
     private static void createCardAtPoint(Point point) {
         TreeHandler.addCard(
                 Renderer.window.PositionToGrid(new Vector2i(
-                        point.x - Renderer.window.getWindowScrenLocation().x,
-                        point.y - Renderer.window.getWindowScrenLocation().y)),
-                TeamHandler.getdefault(),
+                        point.x - CardSizeTypes.SMALL.x/2 - Renderer.window.getWindowScrenLocation().x,
+                        point.y - CardSizeTypes.SMALL.y/2 - Renderer.window.getWindowScrenLocation().y)),
+                TreeHandler.getTeamMode() == CardTeamAssignments.DEFAULT ? TeamHandler.getdefault() : MutableFlags.lastUsedTeam,
                 CardSizeTypes.SMALL
         );
     }

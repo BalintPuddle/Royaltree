@@ -5,6 +5,7 @@ import balintpuddle.io.renderer.Renderer;
 import balintpuddle.scene.Entity;
 import balintpuddle.tree.line.LineMode;
 import balintpuddle.tree.team.Team;
+import balintpuddle.utils.Log;
 import balintpuddle.utils.Vector2i;
 
 import javax.swing.*;
@@ -41,7 +42,7 @@ public class Card extends Entity {
         Renderer.window.addPanel(panel);
         Renderer.window.refresh();
 
-        System.out.println("Created new card at " + panel.getX() + "," + panel.getY());
+        Log.info("Created new card at (" + panel.getX() + "," + panel.getY() + ")");
     }
 
     public Card(Vector2i position, Team team, Vector2i size) {
@@ -65,7 +66,7 @@ public class Card extends Entity {
         Renderer.window.addPanel(panel);
         Renderer.window.refresh();
 
-        System.out.println("Created new card at " + panel.getX() + "," + panel.getY());
+        Log.info("Created new card at (" + panel.getX() + "," + panel.getY() + ")");
     }
 
     @Override
@@ -98,7 +99,6 @@ public class Card extends Entity {
     }
 
     public void addChild(Card child) {
-        System.out.println(getChildren());
         children.add(child);
         child.addParent(this);
         TreeHandler.drawCardLine(this, child);

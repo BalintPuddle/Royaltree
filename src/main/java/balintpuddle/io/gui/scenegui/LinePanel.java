@@ -24,38 +24,35 @@ public class LinePanel extends JPanel {
             orientation = 1;
         }
 
-        if (orientation == 0) {
-            if (Math.abs(pos.x-pos.z) < LINEWIDTH) { //If the 2 positons x coordinates are less than the width default them to a straight line
-                setSize(LINEWIDTH, Math.abs(pos.y-pos.w));
-                this.positons = new Vector4i(CORRECTIVE_WIDTH, 0, CORRECTIVE_WIDTH, getHeight());
-            }
-            else if (Math.abs(pos.y-pos.w) < LINEWIDTH) { //If the 2 positons y coordinates are less than the width default them to a straight line
-                setSize(Math.abs(pos.x-pos.z), LINEWIDTH);
-                this.positons = new Vector4i(0, CORRECTIVE_WIDTH, getWidth(), CORRECTIVE_WIDTH);
-            }
-            else {
-                setSize(Math.abs(pos.x-pos.z), Math.abs(pos.y-pos.w)); //Setting the size to equal a rectangle drawn by start point and end point
+        finalize(pos, orientation);
+        this.color = color;
+        setVisible(true);
+    }
+
+    private void finalize(Vector4i pos, int orientation) {
+        if (Math.abs(pos.x-pos.z) < LINEWIDTH) { //If the 2 positons x coordinates are less than the width default them to a straight line
+            setSize(LINEWIDTH, Math.abs(pos.y-pos.w));
+            this.positons = new Vector4i(CORRECTIVE_WIDTH, 0, CORRECTIVE_WIDTH, getHeight());
+        }
+        else if (Math.abs(pos.y-pos.w) < LINEWIDTH) { //If the 2 positons y coordinates are less than the width default them to a straight line
+            setSize(Math.abs(pos.x-pos.z), LINEWIDTH);
+            this.positons = new Vector4i(0, CORRECTIVE_WIDTH, getWidth(), CORRECTIVE_WIDTH);
+        }
+        else {
+            setSize(Math.abs(pos.x-pos.z), Math.abs(pos.y-pos.w)); //Setting the size to equal a rectangle drawn by start point and end point
+            if (orientation == 0) {
                 this.positons = new Vector4i(0, 0, getWidth(), getHeight()); //Drawing a line between it's left corner and right corner
             }
+            else {
+                this.positons = new Vector4i(getWidth(), 0, 0, getHeight()); //Drawing a line between it's left corner and right corner
+            }
+        }
+        if (orientation == 0) {
             setLocation(pos.x, pos.y);
         }
         else {
-            if (Math.abs(pos.x-pos.z) < LINEWIDTH) { //If the 2 positon's x coordinates are less than the width default them to a straight line
-                setSize(LINEWIDTH, Math.abs(pos.y-pos.w));
-                this.positons = new Vector4i(CORRECTIVE_WIDTH, 0, CORRECTIVE_WIDTH, getHeight());
-            }
-            else if (Math.abs(pos.y-pos.w) < LINEWIDTH) { //If the 2 positon's y coordinates are less than the width default them to a straight line
-                setSize(Math.abs(pos.x-pos.z), LINEWIDTH);
-                this.positons = new Vector4i(0, CORRECTIVE_WIDTH, getWidth(), CORRECTIVE_WIDTH);
-            }
-            else {
-                setSize(Math.abs(pos.x-pos.z), Math.abs(pos.y-pos.w)); //Setting the size to equal a rectangle drawn by start point and end point
-                this.positons = new Vector4i(getWidth(), 0, 0, getHeight()); //Drawing a line between it's left corner and right corner
-            }
             setLocation(pos.z, pos.y);
         }
-        this.color = color;
-        setVisible(true);
     }
 
 

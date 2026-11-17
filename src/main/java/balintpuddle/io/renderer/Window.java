@@ -3,16 +3,20 @@ package balintpuddle.io.renderer;
 import balintpuddle.global.ImmutableFlags;
 import balintpuddle.io.file.ProjectHandler;
 import balintpuddle.io.gui.GuiHandler;
+import balintpuddle.io.gui.dialog.AboutDialog;
+import balintpuddle.io.gui.dialog.DialogStrings;
 import balintpuddle.io.gui.dialog.SettingsDialog;
 import balintpuddle.io.gui.dialog.iDialogInfo;
 import balintpuddle.io.input.Input;
 import balintpuddle.scene.Scene;
+import balintpuddle.utils.Log;
 import balintpuddle.utils.Vector2i;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.net.URL;
 
 public class Window {
     private JFrame frame;
@@ -33,6 +37,7 @@ public class Window {
         frame.setLayout(null);
         frame.setResizable(true);
         frame.setFocusable(true);
+        frame.setIconImage(getAppIcon());
 
         Input input = new Input();
         frame.addKeyListener(input);
@@ -60,6 +65,8 @@ public class Window {
                 GuiHandler.onWindowResize(container.getWidth(), container.getHeight());
             }
         });
+
+        DialogStrings.init();
     }
 
     private JMenuBar createMenubar() {
@@ -117,11 +124,21 @@ public class Window {
             editmenu.add(teams);
 
         // [ABOUT] --> MENU ITEMS
-            JMenuItem project  = new JMenuItem("Royaltree");
+            JMenuItem royaltree  = new JMenuItem("Royaltree");
+            royaltree.addActionListener(_ ->  {
+                createDialog("About Royaltree", 900, 400, new AboutDialog(), DialogStrings.ABOUT_ROYALTREE);
+            });
             JMenuItem credits = new JMenuItem("Credits");
+            credits.addActionListener(_ -> {
+                createDialog("Credits", 450, 300, new AboutDialog(), DialogStrings.ABOUT_CREDITS);
+            });
 
-            aboutmenu.add(project);
+            aboutmenu.add(royaltree);
             aboutmenu.add(credits);
+
+        // [HELP --> MENU ITEMS
+            JMenuItem docs = new JMenuItem("Open Docs");
+            helpmenu.add(docs);
 
         //====================================================
         //Adding all the menus  to the bar
@@ -130,6 +147,21 @@ public class Window {
         bar.add(aboutmenu);
         bar.add(helpmenu);
         return bar;
+    }
+
+    public Image getAppIcon() {
+        Image image = null;
+        URL iconURL = GuiHandler.class.getResource("/appicon.png");
+
+        if (iconURL != null) {
+            ImageIcon icon = new ImageIcon(iconURL);
+            Image appimage = icon.getImage();
+            return appimage;
+        }
+        else {
+            Log.error("Could not find button icon with path: " + "/appicon.png");
+        }
+        return null;
     }
 
     public <T> void createDialog(String title, int width, int height, iDialogInfo info, T modifiable) {

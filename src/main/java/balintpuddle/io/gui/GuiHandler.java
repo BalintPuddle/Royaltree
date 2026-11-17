@@ -4,6 +4,7 @@ import balintpuddle.io.gui.dialog.CardDialog;
 import balintpuddle.io.input.InteractionMode;
 import balintpuddle.io.renderer.Renderer;
 import balintpuddle.tree.card.Card;
+import balintpuddle.utils.Log;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,11 +48,12 @@ public class GuiHandler {
     }
 
     public static void onWindowResize(int newWidth, int newHeight) {
-        sidebar.setSize(newHeight/15, newHeight/3);
+        if (sidebar != null) { //Sometimes this gets called before its initialized so it has to be null checked
+            sidebar.setSize(newHeight/15, newHeight/3);
+        }
         cordsLabel.setLocation(newHeight/51, (int) (newHeight * 0.90));
         cordsLabel.setFont(new Font("Arial", Font.BOLD, newHeight/50));
         cordsLabel.setSize(newWidth/15, newHeight/15);
-        System.out.println(newHeight);
     }
 
     private static void addButtons(GuiPanel toolpanel) {
@@ -66,33 +68,33 @@ public class GuiHandler {
         //CLICK ACTION LISTENERS -------------------------------------------
 
         moveButton.addActionListener(_ -> {
-            System.out.println("Move button pressed");
             setMode(InteractionMode.MOVE);
             toggleButtonVisuals(0);
+            Log.info("-> INTERACTION MODE: MOVE");
         });
 
         addButton.addActionListener(_ -> {
-            System.out.println("Add button pressed");
             setMode(InteractionMode.ADD);
             toggleButtonVisuals(1);
+            Log.info("-> INTERACTION MODE: ADD");
         });
 
         editButton.addActionListener(_ -> {
-            System.out.println("Edit button pressed");
             setMode(InteractionMode.EDIT);
             toggleButtonVisuals(2);
+            Log.info("-> INTERACTION MODE: EDIT");
         });
 
         connectionButton.addActionListener(_ -> {
-            System.out.println("Connection button pressed");
             setMode(InteractionMode.CONNECT);
             toggleButtonVisuals(3);
+            Log.info("-> INTERACTION MODE: CONNECT");
         });
 
         deleteButton.addActionListener(_ -> {
-            System.out.println("Delete button pressed");
             setMode(InteractionMode.DELETE);
             toggleButtonVisuals(4);
+            Log.info("-> INTERACTION MODE: DELETE");
         });
 
         toolpanel.add(moveButton);
@@ -117,7 +119,7 @@ public class GuiHandler {
             button.setIcon(new ImageIcon(scaled));
         }
         else {
-            System.out.println("[ERROR] Could not find button icon with path: " + iconpath);
+            Log.error("Could not find button icon with path: " + iconpath);
         }
         buttons.add(button);
 

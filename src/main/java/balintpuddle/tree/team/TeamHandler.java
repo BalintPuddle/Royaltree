@@ -1,5 +1,8 @@
 package balintpuddle.tree.team;
 
+import balintpuddle.tree.card.Card;
+import balintpuddle.tree.card.TreeHandler;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +72,11 @@ public class TeamHandler {
     }
 
     public static void remove(int index) {
+        for (Card card : TreeHandler.getCards()) {
+            if (card.getTeam() == teams.get(index)) {
+                card.setTeam(getdefault());
+            }
+        }
         teams.remove(index);
     }
 }

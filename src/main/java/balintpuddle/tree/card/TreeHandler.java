@@ -5,6 +5,7 @@ import balintpuddle.tree.line.Line;
 import balintpuddle.tree.line.LineMode;
 import balintpuddle.tree.line.LineType;
 import balintpuddle.tree.team.Team;
+import balintpuddle.utils.Log;
 import balintpuddle.utils.Vector2i;
 import balintpuddle.utils.Vector4i;
 
@@ -211,7 +212,7 @@ public class TreeHandler {
             }
         }
         else {
-            System.out.println("ERROR: Failed to connect cards from " + (from==null ? "NULL" : from.getId()) + " to " + (to==null ? "NULL" : to.getId()));
+            Log.warning("Failed to connect cards from " + (from == null ? "NULL" : from.getId()) + " to " + (to == null ? "NULL" : to.getId()));
         }
     }
 
@@ -231,7 +232,8 @@ public class TreeHandler {
                 return line;
             }
         }
-        throw new NoSuchElementException("No such line!");
+        Log.error("No such line: " + from.getId() + " -> " + to.getId());
+        return null;
     }
 
     public static LineMode getMode() {

@@ -4,10 +4,12 @@ import balintpuddle.io.gui.menu.OptionPanel;
 import balintpuddle.io.gui.menu.TeamPanel;
 import balintpuddle.io.renderer.Renderer;
 import balintpuddle.io.renderer.WindowPanel;
+import balintpuddle.tree.card.CardTeamAssignments;
 import balintpuddle.tree.card.TreeHandler;
 import balintpuddle.tree.line.LineMode;
 import balintpuddle.tree.team.Team;
 import balintpuddle.tree.team.TeamHandler;
+import balintpuddle.utils.Log;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,6 +22,7 @@ public class SettingsDialog implements iDialogInfo {
     private JPanel colorvisual;
     private Color currentColor;
     private JComboBox lineModesBox;
+    private JComboBox<String> newCardTeamBehaviour;
 
     @Override
     public <T> void create(JPanel panel, T modifiable) {
@@ -36,20 +39,20 @@ public class SettingsDialog implements iDialogInfo {
 
         JButton generalbtn = new JButton("General");
         generalbtn.addActionListener(_ -> {
-            System.out.println("General button pressed");
+            Log.info("Settings: Building 'General' page");
             page = 0;
             buildPage(0, content);
         });
 
         JButton teamsbtn = new JButton("Teams");
         teamsbtn.addActionListener(_ -> {
-            System.out.println("Teams button pressed");
+            Log.info("Settings: Building 'Teams' page");
             page = 1;
             buildPage(1, content);
         });
         JButton linesbtn = new JButton("Lines");
         linesbtn.addActionListener(_ -> {
-            System.out.println("Lines button pressed");
+            Log.info("Settings: Building 'Lines' page");
             page = 2;
             buildPage(2, content);
         });
@@ -75,6 +78,14 @@ public class SettingsDialog implements iDialogInfo {
 
                 Renderer.window.setShowGrid(showgrid.isSelected());
                 TreeHandler.setYearFormat(timesuffixfield.getText());
+                switch (newCardTeamBehaviour.getSelectedItem().toString()) {
+                    case "Default":
+                        TreeHandler.setTeamMode(CardTeamAssignments.DEFAULT);
+                        break;
+                    case "Last used":
+                        TreeHandler.setTeamMode(CardTeamAssignments.LAST_USED);
+                        break;
+                }
                 break;
             case 1:
                 TreeHandler.updateAllCards();
@@ -108,7 +119,7 @@ public class SettingsDialog implements iDialogInfo {
                 options.get(1).add(showgrid);
 
                 String[] newCardTeamBehaviourList = {"Default", "Last used"};
-                JComboBox<String> newCardTeamBehaviour = new JComboBox<>(newCardTeamBehaviourList);
+                newCardTeamBehaviour = new JComboBox<>(newCardTeamBehaviourList);
                 options.get(2).add(new JLabel("New card team assignment:"));
                 options.get(2).add(newCardTeamBehaviour);
 
